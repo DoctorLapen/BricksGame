@@ -348,8 +348,8 @@ MonoBehaviour:
   _cellPrefab: {fileID: 7946468425717436258, guid: b687e09df6315b044b53f621f24a8db5,
     type: 3}
   _startPoint: {fileID: 222370787}
-  _horizontalOffset: 0.3
-  _verticalOffset: 0.3
+  _horizontalOffset: 0.1
+  _verticalOffset: 0.1
   _columns: 10
   _rows: 20
 --- !u!4 &1755883682

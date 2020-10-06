@@ -2,7 +2,7 @@
 
 namespace SuperBricks
 {
-    public class FixedGridView:MonoBehaviour
+    public class FixedGridView:MonoBehaviour, IFixedGridView
     {
         
 
