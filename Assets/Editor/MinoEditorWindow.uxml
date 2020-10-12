@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="MinoGrid" style="flex-direction: row; flex-wrap: wrap; height: auto;" />
+    <ui:Button text="Button" />
+</ui:UXML>
