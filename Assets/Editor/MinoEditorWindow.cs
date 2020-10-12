@@ -6,12 +6,16 @@ namespace SuperBricks.Editor
 {
     public class MinoEditorWindow : EditorWindow
     {
+        private const int WINDOW_WIDTH = 270;
+        private const int WINDOW_HEIGHT = 1000;
+
         [MenuItem("Window/MinoEditor")]
         private static void ShowWindow()
         {
             var window = GetWindow<MinoEditorWindow>();
             window.titleContent = new GUIContent("MinoEditor");
-            window.maxSize = new Vector2(270,1000);
+            
+            window.maxSize = new Vector2(WINDOW_WIDTH,WINDOW_HEIGHT);
             window.Show();
         }
         private void OnEnable()
