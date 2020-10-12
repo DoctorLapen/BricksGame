@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
-    <ui:Button text="Button" class="cell" style="width: 10px; height: 10px; max-width: 100px; max-height: 100px; min-width: 100px; min-height: 10px;">
+    <ui:Button class="cell" style="width: 10px; height: 10px; max-width: 100px; max-height: 100px; min-width: 20px; min-height: 20px;">
         <Style src="cell.uss" />
     </ui:Button>
 </ui:UXML>

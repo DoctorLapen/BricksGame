@@ -11,7 +11,7 @@ namespace SuperBricks.Editor
         {
             var window = GetWindow<MinoEditorWindow>();
             window.titleContent = new GUIContent("MinoEditor");
-            window.maxSize = new Vector2(100,100);
+            window.maxSize = new Vector2(270,1000);
             window.Show();
         }
         private void OnEnable()
