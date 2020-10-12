@@ -13,6 +13,7 @@ namespace SuperBricks.Editor
         private const int WINDOW_WIDTH = 270;
         private const int WINDOW_HEIGHT = 1000;
         private List<Vector2Int> _selectedCells = new List<Vector2Int>();
+        private List<VisualElement> _selectedCellElements = new List<VisualElement>();
 
         [MenuItem("Window/MinoEditor")]
         private static void ShowWindow()
@@ -56,6 +57,8 @@ namespace SuperBricks.Editor
 
            var createButton = root.Query<Button>("CreateButton").First();
            createButton.clicked += CreateMino;
+           var clearButton = root.Query<Button>("ClearGrid").First();
+           clearButton.clicked += ClearGrid;
 
 
         }
@@ -67,19 +70,26 @@ namespace SuperBricks.Editor
             var cellData = (CellData) element.userData;
             if (cellData.isSelected)
             {
-                _selectedCells.Remove(cellData.coordinates);
-                element.style.backgroundColor = new StyleColor(Color.white);
-                cellData.isSelected = false;
+                ClearCell(cellData, element);
             }
             else
             {
                 var coordinates = cellData.coordinates;
                 _selectedCells.Add(coordinates);
+                _selectedCellElements.Add(element);
                 cellData.isSelected = true;
                 element.style.backgroundColor = new StyleColor(Color.black);
             }
 
           
+        }
+
+        private void ClearCell(CellData cellData, VisualElement element)
+        {
+            _selectedCells.Remove(cellData.coordinates);
+            element.style.backgroundColor = new StyleColor(Color.white);
+            _selectedCellElements.Remove(element);
+            cellData.isSelected = false;
         }
 
         private void CreateMino()
@@ -109,7 +119,23 @@ namespace SuperBricks.Editor
                 Selection.activeObject = mino;
             }
         }
-        
+
+        private void ClearGrid()
+        {
+            for (int i = 0; i < _selectedCells.Count; i++)
+            { 
+                var element = _selectedCellElements[i];
+                element.style.backgroundColor = new StyleColor(Color.white);
+                var cellData = (CellData) element.userData;
+                cellData.isSelected = false;
+            }
+            _selectedCellElements.Clear();
+            _selectedCells.Clear();
+        }
+
+
+
+
 
 
     }
