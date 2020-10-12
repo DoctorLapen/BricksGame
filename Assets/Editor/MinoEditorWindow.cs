@@ -9,7 +9,7 @@ namespace SuperBricks.Editor
     {
         private const int WINDOW_WIDTH = 270;
         private const int WINDOW_HEIGHT = 1000;
-        private List<Vector2Int> _coordunats = new List<Vector2Int>();
+        private List<Vector2Int> _coordinates = new List<Vector2Int>();
 
         [MenuItem("Window/MinoEditor")]
         private static void ShowWindow()
@@ -37,8 +37,13 @@ namespace SuperBricks.Editor
                     var cell = new Button();
                     cell.style.minHeight = 20;
                     cell.style.minWidth = 20;
-                    cell.userData = new Vector2Int(column,row);
+                    var cellData = new CellData();
+                    cellData.coordinates = new Vector2Int(column,row);
+                    cellData.isSelected = false;
+                    cell.userData = cellData;
+                    cell.style.backgroundColor = new StyleColor(Color.white);
                     cell.clickable.clickedWithEventInfo += SelectedCell;
+                    
                     grid.Add(cell);
                 }
 
@@ -52,10 +57,22 @@ namespace SuperBricks.Editor
 
         private void SelectedCell(EventBase eventData)
         {
+            
             var element = (VisualElement) eventData.target;
-            var coordunat = (Vector2Int)element.userData;
-            _coordunats.Add(coordunat);
-            Debug.Log(coordunat);
+            var cellData = (CellData) element.userData;
+            if (cellData.isSelected)
+            {
+                element.style.backgroundColor = new StyleColor(Color.white);
+            }
+            else
+            {
+                var coordinates = cellData.coordinates;
+                _coordinates .Add(coordinates);
+                cellData.isSelected = true;
+                element.style.backgroundColor = new StyleColor(Color.black);
+            }
+
+          
         }
 
 
