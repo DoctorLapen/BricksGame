@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,6 +9,7 @@ namespace SuperBricks.Editor
     {
         private const int WINDOW_WIDTH = 270;
         private const int WINDOW_HEIGHT = 1000;
+        private List<Vector2Int> _coordunats = new List<Vector2Int>();
 
         [MenuItem("Window/MinoEditor")]
         private static void ShowWindow()
@@ -23,19 +25,39 @@ namespace SuperBricks.Editor
             var root = rootVisualElement;
                 
             var minoEditorUXML = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MinoEditorWindow.uxml");
-            var cell = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/CellMinoInEditor.uxml");
+           // var cell = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/CellMinoInEditor.uxml");
+            
             minoEditorUXML.CloneTree(root);
             var grid = root.Query<VisualElement>("MinoGrid").First();
           
-            for (int i = 0; i < 200; i++)
+            for (int row = 0; row < 20; row++)
             {
-                cell.CloneTree(grid);
+                for (int column = 0; column < 10; column++)
+                {
+                    var cell = new Button();
+                    cell.style.minHeight = 20;
+                    cell.style.minWidth = 20;
+                    cell.userData = new Vector2Int(column,row);
+                    cell.clickable.clickedWithEventInfo += SelectedCell;
+                    grid.Add(cell);
+                }
+
             }
+            
 
 
 
 
         }
+
+        private void SelectedCell(EventBase eventData)
+        {
+            var element = (VisualElement) eventData.target;
+            var coordunat = (Vector2Int)element.userData;
+            _coordunats.Add(coordunat);
+            Debug.Log(coordunat);
+        }
+
 
     }
 
