@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace SuperBricks
 {
@@ -6,9 +7,9 @@ namespace SuperBricks
     public class Mino : ScriptableObject
     {
         [SerializeField]
-        private Vector2Int[] _blocksLocalCoordinates;
+        private List<Vector2Int> _blocksLocalCoordinates = new List<Vector2Int>();
 
-        public Vector2Int[] BlocksLocalCoordinates
+        public List<Vector2Int> BlocksLocalCoordinates
         {
             get { return this._blocksLocalCoordinates; }
         }

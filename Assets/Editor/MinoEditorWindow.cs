@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+
 
 namespace SuperBricks.Editor
 {
@@ -9,7 +12,7 @@ namespace SuperBricks.Editor
     {
         private const int WINDOW_WIDTH = 270;
         private const int WINDOW_HEIGHT = 1000;
-        private List<Vector2Int> _coordinates = new List<Vector2Int>();
+        private List<Vector2Int> _selectedCells = new List<Vector2Int>();
 
         [MenuItem("Window/MinoEditor")]
         private static void ShowWindow()
@@ -51,6 +54,8 @@ namespace SuperBricks.Editor
             
 
 
+           var createButton = root.Query<Button>("CreateButton").First();
+           createButton.clicked += CreateMino;
 
 
         }
@@ -62,18 +67,49 @@ namespace SuperBricks.Editor
             var cellData = (CellData) element.userData;
             if (cellData.isSelected)
             {
+                _selectedCells.Remove(cellData.coordinates);
                 element.style.backgroundColor = new StyleColor(Color.white);
+                cellData.isSelected = false;
             }
             else
             {
                 var coordinates = cellData.coordinates;
-                _coordinates .Add(coordinates);
+                _selectedCells.Add(coordinates);
                 cellData.isSelected = true;
                 element.style.backgroundColor = new StyleColor(Color.black);
             }
 
           
         }
+
+        private void CreateMino()
+        {
+            var sortedCellCoordinates = _selectedCells.OrderBy(v => v.y).ThenBy(v => v.x).ToList();
+            Vector2Int zeroBlock = sortedCellCoordinates[0];
+            var mino = ScriptableObject.CreateInstance<Mino>();
+            foreach (var block in sortedCellCoordinates)
+            {
+                var localCoordinate = block - zeroBlock;
+                mino.BlocksLocalCoordinates.Add(localCoordinate);
+            }
+            var path = EditorUtility.SaveFilePanel(
+                "Save Mino",
+                "Assets",
+                 "Mino",
+                "asset");
+            
+            if (path.Length != 0)
+            {
+                var index = path.IndexOf("/Assets/") + 1;
+                path = path.Substring(index);
+                AssetDatabase.CreateAsset(mino, path);
+                AssetDatabase.SaveAssets();
+                EditorUtility.FocusProjectWindow();
+
+                Selection.activeObject = mino;
+            }
+        }
+        
 
 
     }
