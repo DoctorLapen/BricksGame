@@ -28,6 +28,13 @@ namespace SuperBricks
 
         }
 
+        private void Awake()
+        {
+            if (Input.touchCount > 0)
+            {
+            }
+        }
+
         private Mino SelectRandomMino()
         {
             int minoIndex = Random.Range(FIRST_INDEX, _minos.Length);
