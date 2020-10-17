@@ -51,17 +51,23 @@ namespace SuperBricks
             _blocks[coord.x, coord.y] = Instantiate(_cellPrefab, spawnPosition, Quaternion.identity,transform).transform;
         }
 
-        public void MoveSprite(Vector2Int oldCoordinates, Vector2Int newCoordinates)
+
+        public void MoveSprite(Vector2Int newCoordinates, Transform spriteTrsnsform)
+        {
+            var newX = newCoordinates.x;
+            var newY = newCoordinates.y;
+            spriteTrsnsform.localPosition = CalculateCellPosition(newX, newY);
+
+            _blocks[newX, newY] = spriteTrsnsform;
+        }
+
+        public Transform GetSpriteTransform(Vector2Int oldCoordinates)
         {
             var oldX = oldCoordinates.x;
             var oldY = oldCoordinates.y;
-            var newX = newCoordinates.x;
-            var newY = newCoordinates.y;
-            Transform spriteTrsnsform = _blocks[oldX, oldY];
-            spriteTrsnsform.localPosition = CalculateCellPosition(newX, newY);
-            _blocks[newX, newY] = spriteTrsnsform;
-            _blocks[oldX, oldY] = null;
 
+            Transform spriteTrsnsform = _blocks[oldX, oldY];
+            return spriteTrsnsform;
         }
     }
 }

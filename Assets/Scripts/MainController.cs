@@ -69,12 +69,20 @@ namespace SuperBricks
         private void MoveMino(Vector2Int direction)
         {
             var size = _minoModel.BlocksLocalCoordinates.Count;
+            Transform[] spriteTransforms = new Transform[size];
             for (int i = 0; i < size; i++)
             {
                 var oldCoordinates = _minoModel.BlocksLocalCoordinates[i];
-                _minoModel.BlocksLocalCoordinates[i] += direction;
-                Debug.Log((_minoModel.BlocksLocalCoordinates[i] + direction).ToString());
-                _gridView.MoveSprite(oldCoordinates,_minoModel.BlocksLocalCoordinates[i]);
+                spriteTransforms[i] = _gridView.GetSpriteTransform(oldCoordinates);
+
+            }
+            for (int i = 0; i < size; i++)
+            {
+                var oldCoordinates = _minoModel.BlocksLocalCoordinates[i];
+                var newCoordinates = oldCoordinates + direction;
+                _minoModel.BlocksLocalCoordinates[i] = newCoordinates;
+                _gridView.MoveSprite(newCoordinates,spriteTransforms[i]);
+                
 
             }
         }
