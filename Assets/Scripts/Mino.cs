@@ -4,7 +4,7 @@ using UnityEngine;
 namespace SuperBricks
 {
     [CreateAssetMenu(fileName = "Mino", menuName = "MinoShape", order = 1)]
-    public class Mino : ScriptableObject
+    public class Mino : ScriptableObject, IMino
     {
         [SerializeField]
         private List<Vector2Int> _blocksLocalCoordinates = new List<Vector2Int>();

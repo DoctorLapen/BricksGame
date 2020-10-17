@@ -409,8 +409,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _minos:
   - {fileID: 11400000, guid: fe140b92bdd91f248982e74aeac7a356, type: 2}
-  - {fileID: 11400000, guid: 13ea8d832fd79474a8d54d12459fe31f, type: 2}
   - {fileID: 11400000, guid: 11a19fd8e1ceaa34ca18399fe1ba3f40, type: 2}
+  - {fileID: 11400000, guid: 13ea8d832fd79474a8d54d12459fe31f, type: 2}
   _spawnCell: {x: 3, y: 0}
 --- !u!4 &772008672
 Transform:

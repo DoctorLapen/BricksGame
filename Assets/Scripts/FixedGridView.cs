@@ -21,43 +21,47 @@ namespace SuperBricks
         private uint _columns;
         [SerializeField]
         private uint _rows;
-        private const uint _startIndex = 0;
-        private Vector3[,] _cellsPositions;
 
         private Vector3 _startPosition;
+        private Transform[,] _blocks;
         
 
         private void Awake()
         {
-            _cellsPositions = new Vector3[_columns,_rows];
+            _blocks = new Transform[_columns,_rows];
             _startPosition = _startPoint.localPosition;
-            CalculateCellsPositions();
+            
 
         }
 
-        private void CalculateCellsPositions()
+        private Vector3 CalculateCellPosition(int x,int y)
         {
-            Vector3 rowPosition = _startPosition;
-            for (uint row = _startIndex; row < _rows; row++)
-            {
-                Vector3 columnPosition = rowPosition;
-                for (uint column = _startIndex; column < _columns; column++)
-                {
-                    
-                    _cellsPositions[column, row] = columnPosition;
-                    columnPosition.x += _cellPrefab.sprite.bounds.size.x+ _horizontalOffset;
+            Vector3 cellPosition= _startPosition;
+            
+            cellPosition.x += (_cellPrefab.sprite.bounds.size.x+ _horizontalOffset) * x;
+            cellPosition.y -= (_cellPrefab.sprite.bounds.size.y + _verticalOffset) * y;
+            
+            return cellPosition;
 
-                }
-
-                rowPosition.y -= _cellPrefab.sprite.bounds.size.y + _verticalOffset;
-            }
         }
 
-        public void SpawnSpriteInCell(uint x, uint y)
+        public void SpawnSprite(Vector2Int coord)
         {
-            Vector3 spawnPosition = _cellsPositions[x, y];
-            Instantiate(_cellPrefab, spawnPosition, Quaternion.identity,transform);
+            Vector3 spawnPosition = CalculateCellPosition(coord.x, coord.y);
+            _blocks[coord.x, coord.y] = Instantiate(_cellPrefab, spawnPosition, Quaternion.identity,transform).transform;
         }
 
+        public void MoveSprite(Vector2Int oldCoordinates, Vector2Int newCoordinates)
+        {
+            var oldX = oldCoordinates.x;
+            var oldY = oldCoordinates.y;
+            var newX = newCoordinates.x;
+            var newY = newCoordinates.y;
+            Transform spriteTrsnsform = _blocks[oldX, oldY];
+            spriteTrsnsform.localPosition = CalculateCellPosition(newX, newY);
+            _blocks[newX, newY] = spriteTrsnsform;
+            _blocks[oldX, oldY] = null;
+
+        }
     }
 }
