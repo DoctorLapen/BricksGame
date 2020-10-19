@@ -14,6 +14,6 @@ namespace SuperBricks
             get { return this._blocksLocalCoordinates; }
         }
 
-        
+        public Dictionary<MinoBorder, List<Vector2Int>> BorderIndexes { get; }
     }
 }

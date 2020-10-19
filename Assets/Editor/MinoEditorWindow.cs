@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Debug = UnityEngine.Debug;
 
 
 namespace SuperBricks.Editor
@@ -94,14 +96,30 @@ namespace SuperBricks.Editor
 
         private void CreateMino()
         {
+            var mino = ScriptableObject.CreateInstance<Mino>();
+            //BlocksLocalCoordinates
             var sortedCellCoordinates = _selectedCells.OrderBy(v => v.y).ThenBy(v => v.x).ToList();
             Vector2Int zeroBlock = sortedCellCoordinates[0];
-            var mino = ScriptableObject.CreateInstance<Mino>();
+            List<Vector2Int> localCoordinates = new List<Vector2Int>();
             foreach (var block in sortedCellCoordinates)
             {
                 var localCoordinate = block - zeroBlock;
+                localCoordinates.Add(localCoordinate);
                 mino.BlocksLocalCoordinates.Add(localCoordinate);
             }
+            //Border Bottom
+            var groups = localCoordinates.GroupBy(v => v.x);
+            var maxYs = groups.Select(g => g.Max(v =>v.y));
+            var borders = groups.Zip(maxYs, (g, y) =>
+                new {vectors = g.Select(v => v), y = y}).Select(item => item.vectors.First(v => v.y == item.y));
+            
+            foreach (var b in borders)
+            {
+                Debug.Log(b);
+            }
+
+
+
             var path = EditorUtility.SaveFilePanel(
                 "Save Mino",
                 "Assets",
