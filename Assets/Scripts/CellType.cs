@@ -3,7 +3,6 @@
     public enum CellType
     {
         Empty,
-        BlockInMove,
-        BlockStatic
+        Filled
     }
 }

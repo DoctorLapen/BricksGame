@@ -10,6 +10,8 @@ namespace SuperBricks
     {
         [Inject]
         private IFixedGridView _gridView;
+        [Inject]
+        private IFieldModel _fieldModel;
         
         private const int FIRST_INDEX = 0;
         [SerializeField]
