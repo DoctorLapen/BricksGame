@@ -112,12 +112,9 @@ namespace SuperBricks.Editor
             var maxYs = groups.Select(g => g.Max(v =>v.y));
             var borders = groups.Zip(maxYs, (g, y) =>
                 new {vectors = g.Select(v => v), y = y}).Select(item => item.vectors.First(v => v.y == item.y));
-            
-            foreach (var b in borders)
-            {
-                Debug.Log(b);
-            }
-
+            var bordersIndexes = borders.Select((item, index) => index).ToList();
+            Debug.Log(bordersIndexes.Count);
+            mino.BorderIndexes.AddRange(bordersIndexes);
 
 
             var path = EditorUtility.SaveFilePanel(

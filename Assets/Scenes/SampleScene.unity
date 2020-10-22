@@ -181,7 +181,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
-  _monoInstallers: []
+  _monoInstallers:
+  - {fileID: 2057162260}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -408,9 +409,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _minos:
-  - {fileID: 11400000, guid: fe140b92bdd91f248982e74aeac7a356, type: 2}
-  - {fileID: 11400000, guid: 11a19fd8e1ceaa34ca18399fe1ba3f40, type: 2}
-  - {fileID: 11400000, guid: 13ea8d832fd79474a8d54d12459fe31f, type: 2}
+  - {fileID: 11400000, guid: 58491d0932080e843bc23797d01173a3, type: 2}
   _spawnCell: {x: 3, y: 0}
 --- !u!4 &772008672
 Transform:
@@ -496,3 +495,47 @@ MonoBehaviour:
   _useSceneContext: 0
   _context: {fileID: 516574333}
   _bindType: 2
+--- !u!1 &2057162259
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2057162261}
+  - component: {fileID: 2057162260}
+  m_Layer: 0
+  m_Name: GameInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2057162260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2057162259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 869d9ae8871d481c98bca150fe98fe0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mainGameSettings: {fileID: 11400000, guid: 51d8fee965b48784a95a7c29239048d3, type: 2}
+--- !u!4 &2057162261
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2057162259}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.396671, y: 6.93407, z: -119.02014}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

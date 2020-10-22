@@ -7,11 +7,14 @@ namespace SuperBricks
     {
         private List<Vector2Int> _blockslocalCoordinates = new List<Vector2Int>();
         public List<Vector2Int> BlocksLocalCoordinates => _blockslocalCoordinates;
-        public Dictionary<MinoBorder, List<Vector2Int>> BorderIndexes{ get; }
+        private List<int> borderIndexes = new List<int>();
 
-        public MinoModel(List<Vector2Int> blocksCoordinates )
+        public  List<int> BorderIndexes => borderIndexes;
+
+        public MinoModel(List<Vector2Int> blocksCoordinates,List<int> borderIndexes )
         {
             _blockslocalCoordinates.AddRange(blocksCoordinates);
+            this.borderIndexes.AddRange(borderIndexes);
         }
 
        

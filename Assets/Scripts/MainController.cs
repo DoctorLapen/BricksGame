@@ -12,6 +12,8 @@ namespace SuperBricks
         private IFixedGridView _gridView;
         [Inject]
         private IFieldModel _fieldModel;
+        [Inject]
+        private IMainGameSettings _mainGameSettings;
         
         private const int FIRST_INDEX = 0;
         [SerializeField]
@@ -28,9 +30,7 @@ namespace SuperBricks
         
         private void Start()
         {
-            var mino = SelectRandomMino();
-            
-            SpawnMino(mino);
+            CreateNewMino();
 
         }
 
@@ -48,8 +48,31 @@ namespace SuperBricks
             //Down
             if (Input.GetKeyDown(KeyCode.S))
             {
+                
                 direction  = new Vector2Int(0,1);
-                MoveMino(direction);
+                if ( IsMoveInField(MinoBorder.Bottom, direction) )
+                {
+                    if (IsMovePossible(MinoBorder.Bottom, direction))
+                    {
+                        MoveMino(direction);
+                    }
+                    else
+                    {
+                        Debug.Log("New Mino");
+                        AddMinoToFieldModel();
+                        CreateNewMino();
+                    }
+
+
+                }
+                else
+                {
+                    Debug.Log("New Mino");
+                    AddMinoToFieldModel();
+                    CreateNewMino();
+                }
+
+
             }
             //Right
             else if (Input.GetKeyDown(KeyCode.D))
@@ -66,6 +89,45 @@ namespace SuperBricks
             
 
 
+        }
+
+        private bool IsMovePossible(MinoBorder border,Vector2Int direction)
+        {
+            List<int> BorderIndexes = _minoModel.BorderIndexes;
+            
+            foreach (int borderIndex in BorderIndexes)
+            {
+                Vector2Int coordinate = _minoModel.BlocksLocalCoordinates[borderIndex] + direction;
+                bool isCellEmpty = _fieldModel.IsCellEmpty((uint)coordinate.x,(uint) coordinate.y);
+               if (!isCellEmpty)
+               {
+                   return false;
+               }
+            }
+
+            return true;
+        }
+
+        private bool IsMoveInField(MinoBorder border,Vector2Int direction)
+        {
+            List<int> BorderIndexes = _minoModel.BorderIndexes;
+           
+            int startCoordinate = 0;
+            foreach (int borderIndex in BorderIndexes)
+            {
+                Vector2Int coordinate = _minoModel.BlocksLocalCoordinates[borderIndex] + direction;
+                bool isXInField = startCoordinate <= coordinate.x  && coordinate.x  < _mainGameSettings.ColumnAmount ;
+                bool isYInField = startCoordinate <= coordinate.y  && coordinate.y  < _mainGameSettings.RowAmount ;
+                Debug.Log(coordinate);
+                Debug.Log(!(isXInField && isYInField));
+                if (!(isXInField && isYInField))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+            
         }
 
         private void MoveMino(Vector2Int direction)
@@ -106,9 +168,26 @@ namespace SuperBricks
                 _gridView.SpawnSprite(cell);
 
             }
-            _minoModel = new MinoModel(blockCoordinates);
+            Debug.Log(mino.BorderIndexes.Count);
+            _minoModel = new MinoModel(blockCoordinates,mino.BorderIndexes);
+          
         }
-        
+
+        private void CreateNewMino()
+        {
+            var mino = SelectRandomMino();
+            
+            SpawnMino(mino);
+        }
+
+        private void AddMinoToFieldModel()
+        {
+            foreach (Vector2Int block in _minoModel.BlocksLocalCoordinates)
+            {
+                _fieldModel.FillCell((uint)block.x,(uint)block.y);
+            }
+        }
+
 
     }
 }

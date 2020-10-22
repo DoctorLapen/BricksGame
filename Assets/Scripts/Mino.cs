@@ -13,7 +13,9 @@ namespace SuperBricks
         {
             get { return this._blocksLocalCoordinates; }
         }
+        [SerializeField]
+        private List<int> borderIndexes = new List<int>();
 
-        public Dictionary<MinoBorder, List<Vector2Int>> BorderIndexes { get; }
+        public List<int> BorderIndexes => borderIndexes;
     }
 }
