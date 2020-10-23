@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement>
+        <uie:ObjectField label="Object Field" type="SuperBricks.MainGameSettings" />
+    </ui:VisualElement>
+    <ui:Button text="Create" name="CreateButton" allow-scene-objects="true" />
+</ui:UXML>
