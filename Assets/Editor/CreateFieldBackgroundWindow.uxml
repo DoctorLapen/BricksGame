@@ -3,8 +3,10 @@
     <uie:ObjectField label="GridField" name="ParentField" type="UnityEngine.Transform, UnityEngine.CoreModule" />
     <uie:ObjectField label="StartPoint" name="StartPointField" type="UnityEngine.Transform, UnityEngine.CoreModule" />
     <uie:ObjectField label="SpritePrefab" type="UnityEngine.SpriteRenderer, UnityEngine.CoreModule" name="SpritePrefabField" />
+    <uie:ObjectField label="BackgroundPrefab" type="UnityEngine.SpriteRenderer, UnityEngine.CoreModule" name="BackgroundPrefabField" />
     <uie:FloatField label="X offset" value="0" name="X_OffsetField" />
     <uie:FloatField label="Y offset" value="0" name="Y_OffsetField" />
+    <uie:ColorField label="Background color " value="#3BB5C5FF" name="BackgroundColorField" />
     <uie:ColorField label="Cell color" value="#AD9030FF" name="CellColorField" show-alpha="false" type="UnityEngine.SpriteRenderer, UnityEngine.CoreModule" />
     <ui:Button text="Create" display-tooltip-when-elided="True" name="CreateButton" />
 </ui:UXML>
