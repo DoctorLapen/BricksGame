@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <uie:ObjectField label="MainGameSettings" type="SuperBricks.MainGameSettings, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" allow-scene-objects="false" name="MainGameSettings" />
+    <uie:ObjectField label="StartPoint" name="TransformField" type="UnityEngine.Transform, UnityEngine.CoreModule" />
+    <uie:ObjectField label="SpritePrefab" type="UnityEngine.SpriteRenderer, UnityEngine.CoreModule" name="SpritePrefabField" />
+    <uie:FloatField label="X offset" value="0" name="X_OffestField" />
+    <uie:FloatField label="Y offset" value="0" name="Y_OffestField" />
+    <uie:ColorField label="Background color" value="#FF7B00FF" name="BackgroundField" />
+    <uie:ColorField label="Cell color" value="#AD9030FF" name="CellColorField" show-alpha="false" type="UnityEngine.SpriteRenderer, UnityEngine.CoreModule" />
+    <ui:Button text="Create" display-tooltip-when-elided="True" name="CreateButton" />
+</ui:UXML>

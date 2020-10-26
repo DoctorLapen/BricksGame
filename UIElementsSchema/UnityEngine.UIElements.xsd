@@ -226,6 +226,7 @@
         <xs:attribute default="0" name="low-value" type="xs:float" use="optional" />
         <xs:attribute default="10" name="high-value" type="xs:float" use="optional" />
         <xs:attribute default="0" name="page-size" type="xs:float" use="optional" />
+        <xs:attribute default="false" name="show-input-field" type="xs:boolean" use="optional" />
         <xs:attribute default="Horizontal" name="direction" type="engine:Slider_direction_Type" use="optional" />
         <xs:anyAttribute processContents="lax" />
       </xs:restriction>
@@ -260,6 +261,7 @@
         <xs:attribute default="0" name="low-value" type="xs:int" use="optional" />
         <xs:attribute default="10" name="high-value" type="xs:int" use="optional" />
         <xs:attribute default="0" name="page-size" type="xs:int" use="optional" />
+        <xs:attribute default="false" name="show-input-field" type="xs:boolean" use="optional" />
         <xs:attribute default="Horizontal" name="direction" type="engine:SliderInt_direction_Type" use="optional" />
         <xs:anyAttribute processContents="lax" />
       </xs:restriction>
@@ -478,11 +480,39 @@
         <xs:attribute default="None" name="show-alternating-row-backgrounds" type="engine:ListView_show-alternating-row-backgrounds_Type" use="optional" />
         <xs:attribute default="false" name="reorderable" type="xs:boolean" use="optional" />
         <xs:attribute default="true" name="show-bound-collection-size" type="xs:boolean" use="optional" />
+        <xs:attribute default="false" name="horizontal-scrolling" type="xs:boolean" use="optional" />
         <xs:anyAttribute processContents="lax" />
       </xs:restriction>
     </xs:complexContent>
   </xs:complexType>
   <xs:element name="ListView" substitutionGroup="engine:VisualElement" type="engine:ListViewType" />
+  <xs:simpleType name="TwoPaneSplitView_orientation_Type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Horizontal" />
+      <xs:enumeration value="Vertical" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="TwoPaneSplitViewType">
+    <xs:complexContent mixed="false">
+      <xs:restriction base="engine:VisualElementType">
+        <xs:attribute default="" name="name" type="xs:string" use="optional" />
+        <xs:attribute default="" name="view-data-key" type="xs:string" use="optional" />
+        <xs:attribute default="Position" name="picking-mode" type="engine:VisualElement_picking-mode_Type" use="optional" />
+        <xs:attribute default="" name="tooltip" type="xs:string" use="optional" />
+        <xs:attribute default="None" name="usage-hints" type="engine:VisualElement_usage-hints_Type" use="optional" />
+        <xs:attribute default="0" name="tabindex" type="xs:int" use="optional" />
+        <xs:attribute default="false" name="focusable" type="xs:boolean" use="optional" />
+        <xs:attribute default="" name="class" type="xs:string" use="optional" />
+        <xs:attribute default="" name="content-container" type="xs:string" use="optional" />
+        <xs:attribute default="" name="style" type="xs:string" use="optional" />
+        <xs:attribute default="0" name="fixed-pane-index" type="xs:int" use="optional" />
+        <xs:attribute default="100" name="fixed-pane-initial-dimension" type="xs:int" use="optional" />
+        <xs:attribute default="Horizontal" name="orientation" type="engine:TwoPaneSplitView_orientation_Type" use="optional" />
+        <xs:anyAttribute processContents="lax" />
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TwoPaneSplitView" substitutionGroup="engine:VisualElement" type="engine:TwoPaneSplitViewType" />
   <xs:simpleType name="TreeView_selection-type_Type">
     <xs:restriction base="xs:string">
       <xs:enumeration value="None" />

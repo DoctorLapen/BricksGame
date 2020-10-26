@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0bc0a14bcc7428ea206878695bdf4de, type: 3}
   m_Name: MainGameSettings
   m_EditorClassIdentifier: 
-  _rowAmount: 10
+  _rowAmount: 20
   _columnAmount: 10

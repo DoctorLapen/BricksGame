@@ -35,6 +35,7 @@
         <xs:attribute default="None" name="show-alternating-row-backgrounds" xmlns:q2="UnityEditor.U2D.Animation" type="q2:SelectListView_show-alternating-row-backgrounds_Type" use="optional" />
         <xs:attribute default="false" name="reorderable" type="xs:boolean" use="optional" />
         <xs:attribute default="true" name="show-bound-collection-size" type="xs:boolean" use="optional" />
+        <xs:attribute default="false" name="horizontal-scrolling" type="xs:boolean" use="optional" />
         <xs:anyAttribute processContents="lax" />
       </xs:restriction>
     </xs:complexContent>
