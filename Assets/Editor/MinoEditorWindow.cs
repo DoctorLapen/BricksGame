@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-
+using ModestTree;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -132,8 +132,9 @@ namespace SuperBricks.Editor
             var borders = groups.Zip(maxYs, (g, y) => new {vectors = g.Select(v => v), y = y})
                 .Select(item => item.vectors.First((v) => v.y == item.y));
             ShowCollectiction(borders);
-            var bordersIndexes = borders.Select((item, index) => index).ToList();
-            ShowCollectiction(bordersIndexes);
+             List<int> bordersIndexes= borders.Select(vector => localCoordinates.IndexOf(vector)).ToList();
+
+             ShowCollectiction(bordersIndexes);
             return bordersIndexes;
         }
 
