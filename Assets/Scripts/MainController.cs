@@ -22,7 +22,8 @@ namespace SuperBricks
         [SerializeField]
         private Vector2Int _spawnCell;
 
-        private MinoModel _minoModel; 
+        private MinoModel _minoModel;
+        private List<KeyCode> _correctInputKeys; 
 
         
         
@@ -31,6 +32,7 @@ namespace SuperBricks
         private void Start()
         {
             CreateNewMino();
+            InitializeCorrectKeyCodes();
 
         }
 
@@ -43,57 +45,72 @@ namespace SuperBricks
 
         private void Update()
         {
-            Vector2Int direction = new Vector2Int(0,0);
-            //Move
-            //Down
-            if (Input.GetKeyDown(KeyCode.S))
+            foreach (KeyCode key in _correctInputKeys)
             {
-                
-                direction  = new Vector2Int(0,1);
-                if ( IsMoveInField(MinoBorder.Bottom, direction) )
+                Vector2Int direction = new Vector2Int(0, 0);
+                //Move
+                //Down
+                if (Input.GetKeyDown(key))
                 {
-                    if (IsMovePossible(MinoBorder.Bottom, direction))
+                    MinoBorder border = MinoBorder.Bottom;
+                    if (key == KeyCode.S)
                     {
-                        MoveMino(direction);
+                        direction = new Vector2Int(0, 1);
+                        border = MinoBorder.Bottom;
                     }
-                    else
+
+                    //Right
+                    else if (key == KeyCode.D)
+                    {
+                        direction = new Vector2Int(1, 0);
+                        border = MinoBorder.Right;
+                    }
+                    //Left
+                    else if (Input.GetKeyDown(KeyCode.A))
+                    {
+                        direction = new Vector2Int(-1, 0);
+                        border = MinoBorder.Left;
+                        
+                    }
+
+                    bool isInField = IsMoveInField(border, direction);
+                    bool isMovingPossible = true;
+                    if (isInField)
+                    {
+                        isMovingPossible = IsMovePossible(border, direction);
+                        if (isMovingPossible)
+                        {
+                            MoveMino(direction);
+                        }
+
+
+                    }
+                    if(!(isInField && isMovingPossible) && border == MinoBorder.Bottom)
                     {
                         Debug.Log("New Mino");
-                        AddMinoToFieldModel();
-                        CreateNewMino();
+                        
+                            AddMinoToFieldModel();
+                            CreateNewMino();
+                        
                     }
 
 
                 }
-                else
-                {
-                    Debug.Log("New Mino");
-                    AddMinoToFieldModel();
-                    CreateNewMino();
-                }
+                
+            }
 
-
-            }
-            //Right
-            else if (Input.GetKeyDown(KeyCode.D))
-            {
-                direction = new Vector2Int(1, 0);
-                MoveMino(direction);
-            }
-            //Left
-            else if (Input.GetKeyDown(KeyCode.A))
-            {
-                direction = new Vector2Int(-1, 0);
-                MoveMino(direction);
-            }
-            
 
 
         }
 
+        private void InitializeCorrectKeyCodes()
+        {
+            _correctInputKeys = new List<KeyCode>() {KeyCode.A,KeyCode.S,KeyCode.D};
+        }
+
         private bool IsMovePossible(MinoBorder border,Vector2Int direction)
         {
-            List<int> BorderIndexes = _minoModel.BorderIndexes;
+            List<int> BorderIndexes = _minoModel.BorderIndexes[border].List;
             
             foreach (int borderIndex in BorderIndexes)
             {
@@ -108,9 +125,10 @@ namespace SuperBricks
             return true;
         }
 
+        
         private bool IsMoveInField(MinoBorder border,Vector2Int direction)
         {
-            List<int> BorderIndexes = _minoModel.BorderIndexes;
+            List<int> BorderIndexes = _minoModel.BorderIndexes[border].List;
            
             int startCoordinate = 0;
             foreach (int borderIndex in BorderIndexes)
@@ -169,7 +187,7 @@ namespace SuperBricks
 
             }
             Debug.Log(mino.BorderIndexes.Count);
-            _minoModel = new MinoModel(blockCoordinates,mino.BorderIndexes[MinoBorder.Bottom]);
+            _minoModel = new MinoModel(blockCoordinates,mino.BorderIndexes);
           
         }
 
