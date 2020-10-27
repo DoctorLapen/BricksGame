@@ -96,36 +96,54 @@ namespace SuperBricks.Editor
 
         private void CreateMino()
         {
-            var mino = ScriptableObject.CreateInstance<Mino>();
+            Mino mino = ScriptableObject.CreateInstance<Mino>();
+            
+            List<Vector2Int> localCoordinates = CalculateLocalCoordinates();
             //BlocksLocalCoordinates
+            mino.BlocksLocalCoordinates.AddRange(localCoordinates);
+            //Border Bottom
+            List<int> bordersIndexes = CalculateBordersIndexes(localCoordinates);
+            mino.BorderIndexes.AddRange(bordersIndexes);
+            
+            SaveMinoAsset(mino);
+        }
+
+        private List<Vector2Int> CalculateLocalCoordinates()
+        {
+            Mino mino;
             var sortedCellCoordinates = _selectedCells.OrderBy(v => v.y).ThenBy(v => v.x).ToList();
             Vector2Int zeroBlock = sortedCellCoordinates[0];
             List<Vector2Int> localCoordinates = new List<Vector2Int>();
-            foreach (var block in sortedCellCoordinates)
+            foreach (Vector2Int block in sortedCellCoordinates)
             {
                 var localCoordinate = block - zeroBlock;
                 localCoordinates.Add(localCoordinate);
-                mino.BlocksLocalCoordinates.Add(localCoordinate);
+                
             }
-            //Border Bottom
+
+            return localCoordinates;
+        }
+
+        private static List<int> CalculateBordersIndexes(List<Vector2Int> localCoordinates)
+        {
             var groups = localCoordinates.GroupBy(v => v.x);
-            var maxYs = groups.Select(g => g.Max(v =>v.y));
-            var borders = groups.Zip(maxYs, (g, y) =>
-                new {vectors = g.Select(v => v), y = y}).Select(item => item.vectors.First(v => v.y == item.y));
+            var maxYs = groups.Select(g => g.Max(v => v.y));
+            ShowCollectiction<int>(maxYs);
+            var borders = groups.Zip(maxYs, (g, y) => new {vectors = g.Select(v => v), y = y})
+                .Select(item => item.vectors.First((v) => v.y == item.y));
+            ShowCollectiction(borders);
             var bordersIndexes = borders.Select((item, index) => index).ToList();
-            Debug.Log(bordersIndexes.Count);
-            mino.BorderIndexes.AddRange(bordersIndexes);
+            ShowCollectiction(bordersIndexes);
+            return bordersIndexes;
+        }
 
+        private static void SaveMinoAsset(Mino mino)
+        {
+            string path = EditorUtility.SaveFilePanel("Save Mino", "Assets", "Mino", "asset");
 
-            var path = EditorUtility.SaveFilePanel(
-                "Save Mino",
-                "Assets",
-                 "Mino",
-                "asset");
-            
             if (path.Length != 0)
             {
-                var index = path.IndexOf("/Assets/") + 1;
+                int index = path.IndexOf("/Assets/") + 1;
                 path = path.Substring(index);
                 AssetDatabase.CreateAsset(mino, path);
                 AssetDatabase.SaveAssets();
@@ -146,6 +164,15 @@ namespace SuperBricks.Editor
             }
             _selectedCellElements.Clear();
             _selectedCells.Clear();
+        }
+
+        private static void ShowCollectiction <T>(IEnumerable<T> collection)
+        {
+            foreach (var item in collection)
+            {
+                Debug.Log(item);
+                
+            }
         }
 
 
