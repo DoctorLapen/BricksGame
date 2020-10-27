@@ -9,12 +9,12 @@ namespace SuperBricks
         public List<Vector2Int> BlocksLocalCoordinates => _blockslocalCoordinates;
         private List<int> borderIndexes = new List<int>();
 
-        public  List<int> BorderIndexes => borderIndexes;
+        public  List<int>  BorderIndexes => borderIndexes;
 
-        public MinoModel(List<Vector2Int> blocksCoordinates,List<int> borderIndexes )
+        public MinoModel(List<Vector2Int> blocksCoordinates,IntList borderIndexes )
         {
             _blockslocalCoordinates.AddRange(blocksCoordinates);
-            this.borderIndexes.AddRange(borderIndexes);
+            this.borderIndexes.AddRange(borderIndexes.List);
         }
 
        

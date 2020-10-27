@@ -6,6 +6,6 @@ namespace SuperBricks
     public interface IMino
     {
         List<Vector2Int> BlocksLocalCoordinates { get; }
-         List<int> BorderIndexes { get; }
+         MinoBordersDictionary BorderIndexes { get; }
     }
 }

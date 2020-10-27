@@ -169,7 +169,7 @@ namespace SuperBricks
 
             }
             Debug.Log(mino.BorderIndexes.Count);
-            _minoModel = new MinoModel(blockCoordinates,mino.BorderIndexes);
+            _minoModel = new MinoModel(blockCoordinates,mino.BorderIndexes[MinoBorder.Bottom]);
           
         }
 

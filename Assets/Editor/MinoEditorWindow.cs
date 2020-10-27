@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using ModestTree;
@@ -102,8 +103,21 @@ namespace SuperBricks.Editor
             //BlocksLocalCoordinates
             mino.BlocksLocalCoordinates.AddRange(localCoordinates);
             //Border Bottom
-            List<int> bordersIndexes = CalculateBordersIndexes(localCoordinates);
-            mino.BorderIndexes.AddRange(bordersIndexes);
+            IntList bordersIndexes =new IntList();
+            bordersIndexes.List.AddRange(CalculateBottomBordersIndexes(localCoordinates));
+            mino.BorderIndexes.Add(MinoBorder.Bottom,bordersIndexes);
+            //Border Left
+             bordersIndexes =new IntList();
+            bordersIndexes.List.AddRange(CalculateLeftBordersIndexes(localCoordinates));
+            mino.BorderIndexes.Add(MinoBorder.Left,bordersIndexes);
+            //Border Top
+            bordersIndexes =new IntList();
+            bordersIndexes.List.AddRange(CalculateTopBordersIndexes(localCoordinates));
+            mino.BorderIndexes.Add(MinoBorder.Top,bordersIndexes);
+            //Border right
+            bordersIndexes =new IntList();
+            bordersIndexes.List.AddRange(CalculateRightBordersIndexes(localCoordinates));
+            mino.BorderIndexes.Add(MinoBorder.Right,bordersIndexes);
             
             SaveMinoAsset(mino);
         }
@@ -123,14 +137,48 @@ namespace SuperBricks.Editor
 
             return localCoordinates;
         }
-
-        private static List<int> CalculateBordersIndexes(List<Vector2Int> localCoordinates)
+        private static List<int> CalculateLeftBordersIndexes(List<Vector2Int> localCoordinates)
         {
-            var groups = localCoordinates.GroupBy(v => v.x);
-            var maxYs = groups.Select(g => g.Max(v => v.y));
-            ShowCollectiction<int>(maxYs);
-            var borders = groups.Zip(maxYs, (g, y) => new {vectors = g.Select(v => v), y = y})
-                .Select(item => item.vectors.First((v) => v.y == item.y));
+            Func<Vector2Int,int> func1 = v => v.y;
+            Func<IGrouping<int, Vector2Int>, int> func2 = g => g.Min(v => v.x);
+            Func<Vector2Int, VectorsSupportItem, bool> func3 = (v, item) => v.x == item.maxItemB;
+            
+            return  CalculateBordersIndexes(localCoordinates,func1,func2,func3);
+        }
+        private static List<int> CalculateRightBordersIndexes(List<Vector2Int> localCoordinates)
+        {
+            Func<Vector2Int,int> func1 = v => v.y;
+            Func<IGrouping<int, Vector2Int>, int> func2 = g => g.Max(v => v.x);
+            Func<Vector2Int, VectorsSupportItem, bool> func3 = (v, item) => v.x == item.maxItemB;
+            
+            return  CalculateBordersIndexes(localCoordinates,func1,func2,func3);
+        }
+
+        private static List<int> CalculateTopBordersIndexes(List<Vector2Int> localCoordinates)
+        {
+            Func<Vector2Int,int> func1 = v => v.x;
+            Func<IGrouping<int, Vector2Int>, int> func2 = g => g.Min(v => v.y);
+            Func<Vector2Int, VectorsSupportItem, bool> func3 = (v, item) => v.y == item.maxItemB;
+            
+            return  CalculateBordersIndexes(localCoordinates,func1,func2,func3);
+        }
+        private static List<int> CalculateBottomBordersIndexes(List<Vector2Int> localCoordinates)
+        {
+            Func<Vector2Int,int> func1 = v => v.x;
+            Func<IGrouping<int, Vector2Int>, int> func2 = g => g.Max(v => v.y);
+            Func<Vector2Int, VectorsSupportItem, bool> func3 = (v, item) => v.y == item.maxItemB;
+            
+           return  CalculateBordersIndexes(localCoordinates,func1,func2,func3);
+        }
+
+        private static List<int> CalculateBordersIndexes(List<Vector2Int> localCoordinates,Func<Vector2Int,int> func1,Func<IGrouping<int,Vector2Int>,int>  func2,Func <Vector2Int,VectorsSupportItem,bool>func3)
+        {
+            var groups = localCoordinates.GroupBy(func1);
+            var maxBsItems = groups.Select(func2);
+            ShowCollectiction<int>(maxBsItems);
+            var borders = groups.Zip(maxBsItems, (g, maxB) =>
+                    new  VectorsSupportItem{vectors = g.Select(v => v), maxItemB = maxB})
+                .Select(item => item.vectors.First(v =>func3(v,item)));
             ShowCollectiction(borders);
              List<int> bordersIndexes= borders.Select(vector => localCoordinates.IndexOf(vector)).ToList();
 
@@ -177,7 +225,11 @@ namespace SuperBricks.Editor
         }
 
 
-
+        private class VectorsSupportItem
+        {
+            public IEnumerable< Vector2Int> vectors;
+            public int maxItemB;
+        }
 
 
 
