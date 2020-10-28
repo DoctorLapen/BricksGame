@@ -1,6 +1,6 @@
 ﻿namespace SuperBricks
 {
-    public enum MinoBorder
+    public enum MinoSide
     {
         Bottom,
         Left,

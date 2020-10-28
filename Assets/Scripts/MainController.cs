@@ -52,32 +52,32 @@ namespace SuperBricks
                 //Down
                 if (Input.GetKeyDown(key))
                 {
-                    MinoBorder border = MinoBorder.Bottom;
+                    MinoSide side = MinoSide.Bottom;
                     if (key == KeyCode.S)
                     {
                         direction = new Vector2Int(0, 1);
-                        border = MinoBorder.Bottom;
+                        side = MinoSide.Bottom;
                     }
 
                     //Right
                     else if (key == KeyCode.D)
                     {
                         direction = new Vector2Int(1, 0);
-                        border = MinoBorder.Right;
+                        side = MinoSide.Right;
                     }
                     //Left
                     else if (Input.GetKeyDown(KeyCode.A))
                     {
                         direction = new Vector2Int(-1, 0);
-                        border = MinoBorder.Left;
+                        side = MinoSide.Left;
                         
                     }
 
-                    bool isInField = IsMoveInField(border, direction);
+                    bool isInField = IsMoveInField(side, direction);
                     bool isMovingPossible = true;
                     if (isInField)
                     {
-                        isMovingPossible = IsMovePossible(border, direction);
+                        isMovingPossible = IsMovePossible(side, direction);
                         if (isMovingPossible)
                         {
                             MoveMino(direction);
@@ -85,7 +85,7 @@ namespace SuperBricks
 
 
                     }
-                    if(!(isInField && isMovingPossible) && border == MinoBorder.Bottom)
+                    if(!(isInField && isMovingPossible) && side == MinoSide.Bottom)
                     {
                         Debug.Log("New Mino");
                         
@@ -108,9 +108,9 @@ namespace SuperBricks
             _correctInputKeys = new List<KeyCode>() {KeyCode.A,KeyCode.S,KeyCode.D};
         }
 
-        private bool IsMovePossible(MinoBorder border,Vector2Int direction)
+        private bool IsMovePossible(MinoSide side,Vector2Int direction)
         {
-            List<int> BorderIndexes = _minoModel.BorderIndexes[border].List;
+            List<int> BorderIndexes = _minoModel.GetBorderIndexes(side).List;
             
             foreach (int borderIndex in BorderIndexes)
             {
@@ -126,9 +126,9 @@ namespace SuperBricks
         }
 
         
-        private bool IsMoveInField(MinoBorder border,Vector2Int direction)
+        private bool IsMoveInField(MinoSide side,Vector2Int direction)
         {
-            List<int> BorderIndexes = _minoModel.BorderIndexes[border].List;
+            List<int> BorderIndexes = _minoModel.GetBorderIndexes(side).List;
            
             int startCoordinate = 0;
             foreach (int borderIndex in BorderIndexes)
@@ -168,6 +168,8 @@ namespace SuperBricks
 
             }
         }
+        
+        
 
         private Mino SelectRandomMino()
         {

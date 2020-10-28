@@ -105,19 +105,19 @@ namespace SuperBricks.Editor
             //Border Bottom
             IntList bordersIndexes =new IntList();
             bordersIndexes.List.AddRange(CalculateBottomBordersIndexes(localCoordinates));
-            mino.BorderIndexes.Add(MinoBorder.Bottom,bordersIndexes);
+            mino.BorderIndexes.Add(MinoSide.Bottom,bordersIndexes);
             //Border Left
              bordersIndexes =new IntList();
             bordersIndexes.List.AddRange(CalculateLeftBordersIndexes(localCoordinates));
-            mino.BorderIndexes.Add(MinoBorder.Left,bordersIndexes);
+            mino.BorderIndexes.Add(MinoSide.Left,bordersIndexes);
             //Border Top
             bordersIndexes =new IntList();
             bordersIndexes.List.AddRange(CalculateTopBordersIndexes(localCoordinates));
-            mino.BorderIndexes.Add(MinoBorder.Top,bordersIndexes);
+            mino.BorderIndexes.Add(MinoSide.Top,bordersIndexes);
             //Border right
             bordersIndexes =new IntList();
             bordersIndexes.List.AddRange(CalculateRightBordersIndexes(localCoordinates));
-            mino.BorderIndexes.Add(MinoBorder.Right,bordersIndexes);
+            mino.BorderIndexes.Add(MinoSide.Right,bordersIndexes);
             
             SaveMinoAsset(mino);
         }
