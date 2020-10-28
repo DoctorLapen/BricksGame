@@ -151,22 +151,14 @@ namespace SuperBricks
         private void MoveMino(Vector2Int direction)
         {
             var size = _minoModel.BlocksLocalCoordinates.Count;
-            Transform[] spriteTransforms = new Transform[size];
             for (int i = 0; i < size; i++)
             {
-                var oldCoordinates = _minoModel.BlocksLocalCoordinates[i];
-                spriteTransforms[i] = _gridView.GetSpriteTransform(oldCoordinates);
-
-            }
-            for (int i = 0; i < size; i++)
-            {
-                var oldCoordinates = _minoModel.BlocksLocalCoordinates[i];
-                var newCoordinates = oldCoordinates + direction;
+                Vector2Int oldCoordinate = _minoModel.BlocksLocalCoordinates[i];
+                Vector2Int newCoordinates = oldCoordinate + direction;
                 _minoModel.BlocksLocalCoordinates[i] = newCoordinates;
-                _gridView.MoveSprite(newCoordinates,spriteTransforms[i]);
-                
-
+                _gridView.MoveSprite(newCoordinates);
             }
+            
         }
         
         
@@ -179,6 +171,7 @@ namespace SuperBricks
 
         private void SpawnMino(Mino mino)
         {
+            _gridView.ClearMoveBlocks();
             List<Vector2Int> blockCoordinates = new List<Vector2Int>();
           
             foreach (Vector2Int localBlockCoordinates in mino.BlocksLocalCoordinates)

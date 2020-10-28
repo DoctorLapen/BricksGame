@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace SuperBricks
 {
@@ -23,12 +25,12 @@ namespace SuperBricks
         private uint _rows;
 
         private Vector3 _startPosition;
-        private Transform[,] _blocks;
+        private Queue<Transform> _blocks;
         
 
         private void Awake()
         {
-            _blocks = new Transform[_columns,_rows];
+            _blocks = new Queue<Transform>();
             _startPosition = _startPoint.localPosition;
             
 
@@ -48,26 +50,24 @@ namespace SuperBricks
         public void SpawnSprite(Vector2Int coord)
         {
             Vector3 spawnPosition = CalculateCellPosition(coord.x, coord.y);
-            _blocks[coord.x, coord.y] = Instantiate(_cellPrefab, spawnPosition, Quaternion.identity,transform).transform;
+            Transform block = Instantiate(_cellPrefab, spawnPosition, Quaternion.identity,transform).transform;
+            _blocks.Enqueue(block);
         }
 
 
-        public void MoveSprite(Vector2Int newCoordinates, Transform spriteTrsnsform)
+        public void MoveSprite(Vector2Int newCoordinates)
         {
             var newX = newCoordinates.x;
             var newY = newCoordinates.y;
-            spriteTrsnsform.localPosition = CalculateCellPosition(newX, newY);
+            Transform block = _blocks.Dequeue();
+            block .localPosition = CalculateCellPosition(newX, newY);
 
-            _blocks[newX, newY] = spriteTrsnsform;
+            _blocks.Enqueue(block);
         }
 
-        public Transform GetSpriteTransform(Vector2Int oldCoordinates)
+        public void ClearMoveBlocks()
         {
-            var oldX = oldCoordinates.x;
-            var oldY = oldCoordinates.y;
-
-            Transform spriteTrsnsform = _blocks[oldX, oldY];
-            return spriteTrsnsform;
+            _blocks.Clear();
         }
     }
 }

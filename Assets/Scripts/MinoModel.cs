@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SuperBricks
@@ -10,8 +11,8 @@ namespace SuperBricks
 
         
         
-        private Queue<MinoSide> _minoSides;
-        private SortedDictionary<MinoSide, MinoSide> _rotatedSidesToRealSides;
+        private Queue<MinoSide> _minoSides = new Queue<MinoSide>();
+        private SortedDictionary<MinoSide, MinoSide> _rotatedSidesToRealSides = new SortedDictionary<MinoSide, MinoSide>();
        
         
 
@@ -26,7 +27,8 @@ namespace SuperBricks
                 this.borderIndexes.Add(border.Key,border.Value);
             }
 
-            
+            InitializeRotateVariables();
+
         }
 
         public void RotateMino()
@@ -35,6 +37,7 @@ namespace SuperBricks
             _minoSides.Enqueue(oldSide);
             RotateBorders();
         }
+        
 
         public IntList GetBorderIndexes(MinoSide rotatedBorder)
         {
@@ -52,6 +55,17 @@ namespace SuperBricks
                 _rotatedSidesToRealSides[key] = minoSides.Dequeue();
             }
         }
+
+        private void InitializeRotateVariables()
+        {
+            foreach( MinoSide side in (MinoSide[]) Enum.GetValues(typeof(MinoSide)))
+            {
+                Debug.Log(side);
+                _rotatedSidesToRealSides.Add(side,side);
+                _minoSides.Enqueue(side);
+            }
+        }
+        
 
 
     }
