@@ -6,9 +6,13 @@ namespace SuperBricks
 {
     public class MinoModel
     {
-        public List<Vector2Int> BlocksLocalCoordinates => _blockslocalCoordinates ;
-        private List<Vector2Int> _blockslocalCoordinates = new List<Vector2Int>();
+        public List<Vector2Int> BlocksCoordinates => blocksCoordinates;
+    
+        public List<Vector2Int> BlockslocalCoordinates=> _blockslocalCoordinates[_currentRotateDirection].List;
 
+        private List<Vector2Int> blocksCoordinates;
+        private Dictionary<MinoSide,Vector2IntList> _blockslocalCoordinates = new Dictionary<MinoSide,Vector2IntList>();
+        private MinoSide _currentRotateDirection;
         
         
         private Queue<MinoSide> _minoSides = new Queue<MinoSide>();
@@ -19,9 +23,13 @@ namespace SuperBricks
         private Dictionary<MinoSide,IntList>  borderIndexes = new Dictionary<MinoSide,IntList> ();
         
 
-        public MinoModel(List<Vector2Int> blocksCoordinates,Dictionary<MinoSide,IntList> borderIndexes )
+        public MinoModel(List<Vector2Int> blocksCoordinates,Dictionary<MinoSide,Vector2IntList> localBlocksCoordinates,Dictionary<MinoSide,IntList> borderIndexes )
         {
-            _blockslocalCoordinates.AddRange(blocksCoordinates);
+            this.blocksCoordinates = new List<Vector2Int>(blocksCoordinates);
+            foreach (var border in localBlocksCoordinates)
+            {
+                _blockslocalCoordinates.Add(border.Key,border.Value);
+            }
             foreach (var border in borderIndexes)
             {
                 this.borderIndexes.Add(border.Key,border.Value);
@@ -34,6 +42,7 @@ namespace SuperBricks
         public void RotateMino()
         {
             MinoSide oldSide = _minoSides.Dequeue();
+            _currentRotateDirection = _minoSides.Peek();
             _minoSides.Enqueue(oldSide);
             RotateBorders();
         }
@@ -50,9 +59,11 @@ namespace SuperBricks
         private void RotateBorders()
         {
             Queue<MinoSide> minoSides = new Queue<MinoSide>(_minoSides);
-            foreach (var key in _rotatedSidesToRealSides.Keys )
+            List<MinoSide> values = new List<MinoSide>( _rotatedSidesToRealSides.Values);
+            foreach (var value in values)
             {
-                _rotatedSidesToRealSides[key] = minoSides.Dequeue();
+                MinoSide key = minoSides.Dequeue();
+                _rotatedSidesToRealSides[key] = value;
             }
         }
 
@@ -60,10 +71,13 @@ namespace SuperBricks
         {
             foreach( MinoSide side in (MinoSide[]) Enum.GetValues(typeof(MinoSide)))
             {
-                Debug.Log(side);
+                
                 _rotatedSidesToRealSides.Add(side,side);
                 _minoSides.Enqueue(side);
             }
+
+            _currentRotateDirection = _minoSides.Peek();
+
         }
         
 

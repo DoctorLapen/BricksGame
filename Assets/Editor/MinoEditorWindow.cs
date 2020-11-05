@@ -101,7 +101,23 @@ namespace SuperBricks.Editor
             
             List<Vector2Int> localCoordinates = CalculateLocalCoordinates();
             //BlocksLocalCoordinates
-            mino.BlocksLocalCoordinates.AddRange(localCoordinates);
+            Vector2IntList vectorList = new Vector2IntList();
+            vectorList.List.AddRange(localCoordinates);
+            mino.BlocksLocalCoordinates.Add(MinoSide.Bottom,vectorList);
+            List<Vector2Int> rotateCoordinates = new List<Vector2Int>(localCoordinates);
+            ShowCollectiction(rotateCoordinates);
+            Debug.Log(Enum.GetNames(typeof(MinoSide)).Length);
+            
+            for (int index = 1; index < Enum.GetNames(typeof(MinoSide)).Length; index++)
+            {
+                Debug.Log("rotate");
+                MinoSide key = (MinoSide)index;
+                rotateCoordinates  = CalculateRotateDirectionCoordinates(rotateCoordinates );
+                vectorList = new Vector2IntList();
+                vectorList.List.AddRange(rotateCoordinates);
+                mino.BlocksLocalCoordinates.Add(key,vectorList);
+                ShowCollectiction(rotateCoordinates);
+            }
             //Border Bottom
             IntList bordersIndexes =new IntList();
             bordersIndexes.List.AddRange(CalculateBottomBordersIndexes(localCoordinates));
@@ -137,6 +153,19 @@ namespace SuperBricks.Editor
 
             return localCoordinates;
         }
+
+        private static List<Vector2Int> CalculateRotateDirectionCoordinates(List<Vector2Int> localCoordinates)
+        {
+            List<Vector2Int> rotateCoordinates = new List<Vector2Int>();
+            foreach (Vector2Int coordinate in localCoordinates)
+            {
+                Vector2Int rotateCoordinate = new Vector2Int(-coordinate.y,coordinate.x);
+                rotateCoordinates.Add(rotateCoordinate);
+            }
+
+            return rotateCoordinates;
+        }
+
         private static List<int> CalculateLeftBordersIndexes(List<Vector2Int> localCoordinates)
         {
             Func<Vector2Int,int> func1 = v => v.y;
@@ -175,14 +204,11 @@ namespace SuperBricks.Editor
         {
             var groups = localCoordinates.GroupBy(func1);
             var maxBsItems = groups.Select(func2);
-            ShowCollectiction<int>(maxBsItems);
             var borders = groups.Zip(maxBsItems, (g, maxB) =>
                     new  VectorsSupportItem{vectors = g.Select(v => v), maxItemB = maxB})
                 .Select(item => item.vectors.First(v =>func3(v,item)));
-            ShowCollectiction(borders);
-             List<int> bordersIndexes= borders.Select(vector => localCoordinates.IndexOf(vector)).ToList();
-
-             ShowCollectiction(bordersIndexes);
+            List<int> bordersIndexes= borders.Select(vector => localCoordinates.IndexOf(vector)).ToList();
+            
             return bordersIndexes;
         }
 

@@ -5,7 +5,7 @@ namespace SuperBricks
 {
     public interface IMino
     {
-        List<Vector2Int> BlocksLocalCoordinates { get; }
+        Vector2IntDictionary BlocksLocalCoordinates { get; }
          MinoBordersDictionary BorderIndexes { get; }
     }
 }

@@ -45,6 +45,11 @@ namespace SuperBricks
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                RotateMino();
+            }
+
             foreach (KeyCode key in _correctInputKeys)
             {
                 Vector2Int direction = new Vector2Int(0, 0);
@@ -87,8 +92,7 @@ namespace SuperBricks
                     }
                     if(!(isInField && isMovingPossible) && side == MinoSide.Bottom)
                     {
-                        Debug.Log("New Mino");
-                        
+                     
                             AddMinoToFieldModel();
                             CreateNewMino();
                         
@@ -114,7 +118,7 @@ namespace SuperBricks
             
             foreach (int borderIndex in BorderIndexes)
             {
-                Vector2Int coordinate = _minoModel.BlocksLocalCoordinates[borderIndex] + direction;
+                Vector2Int coordinate = _minoModel.BlocksCoordinates[borderIndex] + direction;
                 bool isCellEmpty = _fieldModel.IsCellEmpty((uint)coordinate.x,(uint) coordinate.y);
                if (!isCellEmpty)
                {
@@ -133,11 +137,10 @@ namespace SuperBricks
             int startCoordinate = 0;
             foreach (int borderIndex in BorderIndexes)
             {
-                Vector2Int coordinate = _minoModel.BlocksLocalCoordinates[borderIndex] + direction;
+                Vector2Int coordinate = _minoModel.BlocksCoordinates[borderIndex] + direction;
                 bool isXInField = startCoordinate <= coordinate.x  && coordinate.x  < _mainGameSettings.ColumnAmount ;
                 bool isYInField = startCoordinate <= coordinate.y  && coordinate.y  < _mainGameSettings.RowAmount ;
-                Debug.Log(coordinate);
-                Debug.Log(!(isXInField && isYInField));
+              
                 if (!(isXInField && isYInField))
                 {
                     return false;
@@ -150,12 +153,26 @@ namespace SuperBricks
 
         private void MoveMino(Vector2Int direction)
         {
-            var size = _minoModel.BlocksLocalCoordinates.Count;
+            var size = _minoModel.BlocksCoordinates.Count;
             for (int i = 0; i < size; i++)
             {
-                Vector2Int oldCoordinate = _minoModel.BlocksLocalCoordinates[i];
+                Vector2Int oldCoordinate = _minoModel.BlocksCoordinates[i];
                 Vector2Int newCoordinates = oldCoordinate + direction;
-                _minoModel.BlocksLocalCoordinates[i] = newCoordinates;
+                _minoModel.BlocksCoordinates[i] = newCoordinates;
+                _gridView.MoveSprite(newCoordinates);
+            }
+            
+        }
+        private void RotateMino()
+        {
+            Vector2Int startBlock = _minoModel.BlocksCoordinates[0];
+            _minoModel.RotateMino();
+            var size = _minoModel.BlocksCoordinates.Count;
+            for (int i = 0; i < size; i++)
+            {
+                Vector2Int oldCoordinate = _minoModel.BlockslocalCoordinates[i];
+                Vector2Int newCoordinates = oldCoordinate + startBlock;
+                _minoModel.BlocksCoordinates[i] = newCoordinates;
                 _gridView.MoveSprite(newCoordinates);
             }
             
@@ -172,17 +189,17 @@ namespace SuperBricks
         private void SpawnMino(Mino mino)
         {
             _gridView.ClearMoveBlocks();
-            List<Vector2Int> blockCoordinates = new List<Vector2Int>();
+            List<Vector2Int> bottomBlockCoordinates = new List<Vector2Int>();
           
-            foreach (Vector2Int localBlockCoordinates in mino.BlocksLocalCoordinates)
-            {
-                Vector2Int cell = _spawnCell + localBlockCoordinates;
-                blockCoordinates.Add(cell);
-                _gridView.SpawnSprite(cell);
-
-            }
-            Debug.Log(mino.BorderIndexes.Count);
-            _minoModel = new MinoModel(blockCoordinates,mino.BorderIndexes);
+             foreach (var localBlockCoordinates in mino.BlocksLocalCoordinates[MinoSide.Bottom].List)
+             {
+                 Vector2Int cell = _spawnCell + localBlockCoordinates;
+                 bottomBlockCoordinates.Add(cell);
+                 _gridView.SpawnSprite(cell);
+            
+             }
+             
+            _minoModel = new MinoModel(bottomBlockCoordinates ,mino.BlocksLocalCoordinates,mino.BorderIndexes);
           
         }
 
@@ -195,7 +212,7 @@ namespace SuperBricks
 
         private void AddMinoToFieldModel()
         {
-            foreach (Vector2Int block in _minoModel.BlocksLocalCoordinates)
+            foreach (Vector2Int block in _minoModel.BlocksCoordinates)
             {
                 _fieldModel.FillCell((uint)block.x,(uint)block.y);
             }
