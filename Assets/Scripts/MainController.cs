@@ -47,7 +47,17 @@ namespace SuperBricks
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
-                RotateMino();
+                List<Vector2Int> checkBlockCoordinates = _minoModel.GetCheckBlockCoordinates();
+                if (IsRotateInField(checkBlockCoordinates))
+                {
+                    if (IsRotatePossible(checkBlockCoordinates))
+                    {
+                        RotateMino();
+                    }
+
+                    
+                }
+                
             }
 
             foreach (KeyCode key in _correctInputKeys)
@@ -149,6 +159,42 @@ namespace SuperBricks
 
             return true;
             
+        }
+        private bool IsRotateInField(List<Vector2Int> blocksCoordinates)
+        {
+            Vector2Int startBlock = _minoModel.BlocksCoordinates[0];
+           
+            int startCoordinate = 0;
+            foreach (Vector2Int blockCoordinates in blocksCoordinates)
+            {
+                Vector2Int coordinate = startBlock + blockCoordinates;
+                bool isXInField = startCoordinate <= coordinate.x  && coordinate.x  < _mainGameSettings.ColumnAmount ;
+                bool isYInField = startCoordinate <= coordinate.y  && coordinate.y  < _mainGameSettings.RowAmount ;
+              
+                if (!(isXInField && isYInField))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+            
+        }
+        private bool IsRotatePossible(List<Vector2Int> blocksCoordinates)
+        {
+            
+            Vector2Int startBlock = _minoModel.BlocksCoordinates[0];
+            foreach (Vector2Int blockCoordinates in blocksCoordinates)
+            {
+                Vector2Int coordinate = startBlock + blockCoordinates;
+                bool isCellEmpty = _fieldModel.IsCellEmpty((uint)coordinate.x,(uint) coordinate.y);
+                if (!isCellEmpty)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private void MoveMino(Vector2Int direction)

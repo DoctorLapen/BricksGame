@@ -54,7 +54,28 @@ namespace SuperBricks
             return borderIndexes[realSide];
         }
 
-       
+        public List<Vector2Int> GetCheckBlockCoordinates()
+        {
+            Queue<MinoSide> checkSides = new Queue<MinoSide>(_minoSides);
+            checkSides.Dequeue();
+            MinoSide newRotateDirection = checkSides.Peek();
+            return _blockslocalCoordinates[newRotateDirection].List;
+        }
+        public IntList GetCheckBorderIndexes(MinoSide rotatedBorder)
+        {
+            Queue<MinoSide> minoSides = new Queue<MinoSide>(_minoSides);
+            List<MinoSide> values = new List<MinoSide>( _rotatedSidesToRealSides.Values);
+            SortedDictionary<MinoSide, MinoSide> checkDictionary = new SortedDictionary<MinoSide, MinoSide>();
+            foreach (var value in values)
+            {
+                MinoSide key = minoSides.Dequeue();
+                checkDictionary.Add( key,value);
+            }
+            MinoSide realSide = checkDictionary[rotatedBorder];
+            return borderIndexes[realSide];
+        }
+
+
 
         private void RotateBorders()
         {
