@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -78,6 +79,13 @@ namespace SuperBricks
                 }
                 
             }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                Vector2Int direction = CalculateCoordinatesForBottomEndMove();
+                MoveMino(direction);
+                AddMinoToFieldModel();
+                CreateNewMino();
+            }
 
             foreach (KeyCode key in _correctInputKeys)
             {
@@ -87,14 +95,9 @@ namespace SuperBricks
                 if (Input.GetKeyDown(key))
                 {
                     MinoSide side = MinoSide.Bottom;
-                    if (key == KeyCode.S)
-                    {
-                        direction = new Vector2Int(0, 1);
-                        side = MinoSide.Bottom;
-                    }
 
                     //Right
-                    else if (key == KeyCode.D)
+                    if (key == KeyCode.D)
                     {
                         direction = new Vector2Int(1, 0);
                         side = MinoSide.Right;
@@ -138,7 +141,7 @@ namespace SuperBricks
 
         private void InitializeCorrectKeyCodes()
         {
-            _correctInputKeys = new List<KeyCode>() {KeyCode.A,KeyCode.S,KeyCode.D};
+            _correctInputKeys = new List<KeyCode>() {KeyCode.A,KeyCode.D};
         }
 
         private bool IsMovePossible(MinoSide side,Vector2Int direction)
@@ -156,6 +159,46 @@ namespace SuperBricks
             }
 
             return true;
+        }
+        private Vector2Int CalculateCoordinatesForBottomEndMove()
+        {
+            List<int> BorderIndexes = _minoModel.GetBorderIndexes(MinoSide.Bottom).List;
+            List<Vector2Int> endCoordinates = new List<Vector2Int>();
+
+           
+
+            foreach(int borderIndex in BorderIndexes)
+            {
+                int vectorIndex = 0;
+                Vector2Int endCoordinate = _minoModel.BlocksCoordinates[borderIndex];
+                Vector2Int checkCoordinate = endCoordinate;
+                while (checkCoordinate.y < _mainGameSettings.RowAmount - 1)
+                {
+                    int oneBlockDownX = 1;
+                    checkCoordinate.y += oneBlockDownX;
+                    bool isCellEmpty = _fieldModel.IsCellEmpty((uint)checkCoordinate.x,(uint) checkCoordinate.y);
+                    if (!isCellEmpty)
+                    {
+                        checkCoordinate.y -= 1;
+                        Vector2Int moveVector = checkCoordinate - endCoordinate;
+                        endCoordinates.Add(moveVector);
+                        break;
+                    }
+
+                }
+                vectorIndex++;
+                if (endCoordinates.Count  != vectorIndex)
+                {
+                    Vector2Int moveVector = checkCoordinate - endCoordinate;
+                    endCoordinates.Add(moveVector);
+                }
+
+
+            }
+
+            int minY = endCoordinates.Min(v => v.y);
+            return endCoordinates.First(v => v.y == minY);
+
         }
 
         
