@@ -16,14 +16,21 @@ namespace SuperBricks
         private IMainGameSettings _mainGameSettings;
         
         private const int FIRST_INDEX = 0;
+        private const float TARGET_TIME_AMOUNT= 1f;
         [SerializeField]
         private Mino [] _minos;
+
+        [SerializeField]
+        private float _minoFallSpeed ;
+
+        
 
         [SerializeField]
         private Vector2Int _spawnCell;
 
         private MinoModel _minoModel;
-        private List<KeyCode> _correctInputKeys; 
+        private List<KeyCode> _correctInputKeys;
+        private float _currentTimeAmount = 0f;
 
         
         
@@ -45,6 +52,18 @@ namespace SuperBricks
 
         private void Update()
         {
+            if (TARGET_TIME_AMOUNT < _currentTimeAmount)
+            {
+                Vector2Int direction = new Vector2Int(0, 1);
+                MinoSide side = MinoSide.Bottom;
+                MoveMinoWithChecking(side, direction);
+                _currentTimeAmount = 0f;
+            }
+            else
+            {
+                _currentTimeAmount += Time.deltaTime * _minoFallSpeed;
+            }
+
             if (Input.GetKeyDown(KeyCode.W))
             {
                 List<Vector2Int> checkBlockCoordinates = _minoModel.GetCheckBlockCoordinates();
@@ -88,33 +107,33 @@ namespace SuperBricks
                         
                     }
 
-                    bool isInField = IsMoveInField(side, direction);
-                    bool isMovingPossible = true;
-                    if (isInField)
-                    {
-                        isMovingPossible = IsMovePossible(side, direction);
-                        if (isMovingPossible)
-                        {
-                            MoveMino(direction);
-                        }
-
-
-                    }
-                    if(!(isInField && isMovingPossible) && side == MinoSide.Bottom)
-                    {
-                     
-                            AddMinoToFieldModel();
-                            CreateNewMino();
-                        
-                    }
-
-
+                    MoveMinoWithChecking(side, direction);
                 }
                 
             }
 
 
 
+        }
+
+        private void MoveMinoWithChecking(MinoSide side, Vector2Int direction)
+        {
+            bool isInField = IsMoveInField(side, direction);
+            bool isMovingPossible = true;
+            if (isInField)
+            {
+                isMovingPossible = IsMovePossible(side, direction);
+                if (isMovingPossible)
+                {
+                    MoveMino(direction);
+                }
+            }
+
+            if (!(isInField && isMovingPossible) && side == MinoSide.Bottom)
+            {
+                AddMinoToFieldModel();
+                CreateNewMino();
+            }
         }
 
         private void InitializeCorrectKeyCodes()

@@ -7034,6 +7034,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _minos:
   - {fileID: 11400000, guid: 0eab907397b6a794a8607a1ed4663f67, type: 2}
+  _minoFallSpeed: 1
   _spawnCell: {x: 3, y: 0}
 --- !u!4 &772008672
 Transform:
