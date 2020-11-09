@@ -23,5 +23,14 @@
         {
             _field[x, y] = CellType.Filled;
         }
+
+        public void MakeCellEmpty(uint x, uint y)
+        {
+            _field[x, y] = CellType.Empty;
+        }
+        public CellType GetCell(uint x, uint y)
+        {
+            return _field[x, y];
+        }
     }
 }

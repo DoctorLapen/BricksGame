@@ -8,6 +8,9 @@ namespace SuperBricks
         void SpawnSprite(Vector2Int coordinates);
         void MoveSprite(Vector2Int newCoordinates);
         void ClearMoveBlocks();
+        void DeleteSprite(Vector2Int coordinate);
+        Transform GetStaticSprite(int x,int y);
+        void MoveStaticSprite(int newX,int newY,Transform spriteTransform);
     }
 
 }

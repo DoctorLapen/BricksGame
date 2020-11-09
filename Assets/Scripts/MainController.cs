@@ -82,9 +82,8 @@ namespace SuperBricks
             if (Input.GetKeyDown(KeyCode.S))
             {
                 Vector2Int direction = CalculateCoordinatesForBottomEndMove();
-                MoveMino(direction);
-                AddMinoToFieldModel();
-                CreateNewMino();
+                MinoSide side = MinoSide.Bottom;
+                MoveMinoWithChecking(side, direction);
             }
 
             foreach (KeyCode key in _correctInputKeys)
@@ -135,6 +134,13 @@ namespace SuperBricks
             if (!(isInField && isMovingPossible) && side == MinoSide.Bottom)
             {
                 AddMinoToFieldModel();
+                List<int> deleteLineIndexes = FindFilledHorizontalLines();
+                if (deleteLineIndexes.Count > 0)
+                {
+                    DeleteHorizontalLines(deleteLineIndexes);
+                    MoveLinesDown(deleteLineIndexes);
+                }
+
                 CreateNewMino();
             }
         }
@@ -309,6 +315,66 @@ namespace SuperBricks
              
             _minoModel = new MinoModel(bottomBlockCoordinates ,mino.BlocksLocalCoordinates,mino.BorderIndexes);
           
+        }
+
+        private List<int> FindFilledHorizontalLines()
+        {
+            List<int> lineIndexes = new List<int>();
+            int startRowIndex =(int) _mainGameSettings.RowAmount - 1;
+            for (int row = startRowIndex; row >= 0; row--)
+            {
+                for (int column = 0; column < _mainGameSettings.ColumnAmount; column++)
+                {
+                    if (_fieldModel.IsCellEmpty((uint) column, (uint) row))
+                    {
+                        break;
+                    }
+                    if (column == _mainGameSettings.ColumnAmount - 1)
+                    {
+                        lineIndexes.Add(row);
+                    }
+                }
+            }
+
+            return lineIndexes;
+        }
+
+        private void DeleteHorizontalLines(List<int> lineIndexes)
+        {
+            foreach (int lineIndex in lineIndexes)
+            {
+                for (int column = 0; column < _mainGameSettings.ColumnAmount; column++)
+                {
+                    Vector2Int coordinate = new Vector2Int(column,lineIndex);
+                    _gridView.DeleteSprite(coordinate);
+                    _fieldModel.MakeCellEmpty((uint)column,(uint)lineIndex);
+                }
+            }
+        }
+        private void MoveLinesDown(List<int> lineIndexes)
+        {
+            foreach (int lineIndex in lineIndexes)
+            {
+                int emptyLineIndex = lineIndex;
+                for (int moveLineIndex = lineIndex - 1; moveLineIndex != -1; moveLineIndex--)
+                {
+                    for (int column = 0; column < _mainGameSettings.ColumnAmount; column++)
+                    {
+
+                        if (!_fieldModel.IsCellEmpty((uint) column, (uint) moveLineIndex))
+                        {
+                            _fieldModel.MakeCellEmpty((uint) column,(uint) moveLineIndex);
+                            _fieldModel.FillCell((uint) column,(uint) emptyLineIndex);
+                            Transform spriteTransform = _gridView.GetStaticSprite(column, moveLineIndex);
+                            _gridView.MoveStaticSprite(column, emptyLineIndex,spriteTransform);
+                        }
+                    }
+
+                    emptyLineIndex--;
+
+
+                }
+            }
         }
 
         private void CreateNewMino()
