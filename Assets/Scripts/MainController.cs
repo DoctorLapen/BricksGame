@@ -39,8 +39,17 @@ namespace SuperBricks
         
         private void Start()
         {
-            CreateNewMino();
-            InitializeCorrectKeyCodes();
+           Mino newMino =  SelectRandomMino();
+           if (IsGameOver(newMino))
+           {
+               SpawnMino(newMino);
+           }
+           else
+           {
+               Debug.Log("GameOver");
+           }
+
+           InitializeCorrectKeyCodes();
 
         }
 
@@ -141,7 +150,16 @@ namespace SuperBricks
                     MoveLinesDown(deleteLineIndexes);
                 }
 
-                CreateNewMino();
+                Mino newMino =  SelectRandomMino();
+                if (IsGameOver(newMino))
+                {
+                    SpawnMino(newMino);
+                   
+                }
+                else
+                {
+                    Debug.Log("GameOver");
+                }
             }
         }
 
@@ -390,6 +408,21 @@ namespace SuperBricks
             {
                 _fieldModel.FillCell((uint)block.x,(uint)block.y);
             }
+        }
+
+        private bool IsGameOver(Mino mino)
+        {
+            foreach (Vector2Int localCoordinate in mino.BlocksLocalCoordinates[MinoSide.Bottom].List)
+            {
+                Vector2Int coordinate = localCoordinate + _spawnCell ;
+                bool isCellEmpty = _fieldModel.IsCellEmpty((uint)coordinate.x,(uint) coordinate.y);
+                if (!isCellEmpty)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
 
