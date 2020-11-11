@@ -8,10 +8,10 @@ namespace SuperBricks
     {
         public List<Vector2Int> BlocksCoordinates => blocksCoordinates;
     
-        public List<Vector2Int> BlockslocalCoordinates=> _blockslocalCoordinates[_currentRotateDirection].List;
+        public List<Vector2Int> BlocksLocalCoordinates=> _mino.BlocksLocalCoordinates[_currentRotateDirection];
+        private IMino _mino;
 
         private List<Vector2Int> blocksCoordinates;
-        private Dictionary<MinoSide,Vector2IntList> _blockslocalCoordinates;
         private MinoSide _currentRotateDirection;
         
         
@@ -22,10 +22,10 @@ namespace SuperBricks
 
         
 
-        public MinoModel(List<Vector2Int> blocksCoordinates,Dictionary<MinoSide,Vector2IntList> blockslocalCoordinates )
+        public MinoModel(List<Vector2Int> blocksCoordinates,IMino mino )
         {
             this.blocksCoordinates = new List<Vector2Int>(blocksCoordinates);
-            _blockslocalCoordinates = new Dictionary<MinoSide, Vector2IntList>(blockslocalCoordinates);
+            _mino = mino;
 
             InitializeRotateVariables();
 
@@ -47,7 +47,7 @@ namespace SuperBricks
             Queue<MinoSide> checkSides = new Queue<MinoSide>(_minoSides);
             checkSides.Dequeue();
             MinoSide newRotateDirection = checkSides.Peek();
-            return _blockslocalCoordinates[newRotateDirection].List;
+            return _mino.BlocksLocalCoordinates[newRotateDirection];
         }
         
 

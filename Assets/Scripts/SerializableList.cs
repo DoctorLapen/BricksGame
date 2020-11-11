@@ -8,10 +8,8 @@ namespace SuperBricks
     [Serializable]
     public class SerializableList<T>
     {
-        
         public List<T> List = new List<T>();
 
-       
-
+        
     }
 }

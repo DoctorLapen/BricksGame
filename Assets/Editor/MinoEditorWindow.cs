@@ -101,9 +101,9 @@ namespace SuperBricks.Editor
             
             List<Vector2Int> localCoordinates = CalculateLocalCoordinates();
             //BlocksLocalCoordinates
-            Vector2IntList vectorList = new Vector2IntList();
-            vectorList.List.AddRange(localCoordinates);
-            mino.BlocksLocalCoordinates.Add(MinoSide.Bottom,vectorList);
+            Vector2IntList vectorList = new Vector2IntList(); 
+            vectorList.List.AddRange(localCoordinates );
+           mino.AddPairInCreating(MinoSide.Bottom,vectorList);
             List<Vector2Int> rotateCoordinates = new List<Vector2Int>(localCoordinates);
             ShowCollectiction(rotateCoordinates);
             Debug.Log(Enum.GetNames(typeof(MinoSide)).Length);
@@ -113,9 +113,9 @@ namespace SuperBricks.Editor
                 Debug.Log("rotate");
                 MinoSide key = (MinoSide)index;
                 rotateCoordinates  = CalculateRotateDirectionCoordinates(rotateCoordinates );
-                vectorList = new Vector2IntList();
-                vectorList.List.AddRange(rotateCoordinates);
-                mino.BlocksLocalCoordinates.Add(key,vectorList);
+                 vectorList = new Vector2IntList(); 
+                vectorList.List.AddRange(rotateCoordinates );
+                mino.AddPairInCreating(key, vectorList);
                 ShowCollectiction(rotateCoordinates);
             }
             

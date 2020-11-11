@@ -295,7 +295,7 @@ namespace SuperBricks
             var size = _minoModel.BlocksCoordinates.Count;
             for (int i = 0; i < size; i++)
             {
-                Vector2Int oldCoordinate = _minoModel.BlockslocalCoordinates[i];
+                Vector2Int oldCoordinate = _minoModel.BlocksLocalCoordinates[i];
                 Vector2Int newCoordinates = oldCoordinate + startBlock;
                 _minoModel.BlocksCoordinates[i] = newCoordinates;
                 _gridView.MoveSprite(newCoordinates);
@@ -316,7 +316,7 @@ namespace SuperBricks
             _gridView.ClearMoveBlocks();
             List<Vector2Int> bottomBlockCoordinates = new List<Vector2Int>();
           
-             foreach (var localBlockCoordinates in mino.BlocksLocalCoordinates[MinoSide.Bottom].List)
+             foreach (var localBlockCoordinates in mino.BlocksLocalCoordinates[MinoSide.Bottom])
              {
                  Vector2Int cell = _spawnCell + localBlockCoordinates;
                  bottomBlockCoordinates.Add(cell);
@@ -324,7 +324,7 @@ namespace SuperBricks
             
              }
              
-            _minoModel = new MinoModel(bottomBlockCoordinates ,mino.BlocksLocalCoordinates);
+            _minoModel = new MinoModel(bottomBlockCoordinates ,mino);
           
         }
 
@@ -400,7 +400,7 @@ namespace SuperBricks
 
         private bool IsGameOver(Mino mino)
         {
-            foreach (Vector2Int localCoordinate in mino.BlocksLocalCoordinates[MinoSide.Bottom].List)
+            foreach (Vector2Int localCoordinate in mino.BlocksLocalCoordinates[MinoSide.Bottom])
             {
                 Vector2Int coordinate = localCoordinate + _spawnCell ;
                 bool isCellEmpty = _fieldModel.IsCellEmpty((uint)coordinate.x,(uint) coordinate.y);

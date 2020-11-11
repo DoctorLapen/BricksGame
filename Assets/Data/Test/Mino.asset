@@ -12,13 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b68276234a7475e9ba3dbcdbcec7f35, type: 3}
   m_Name: Mino
   m_EditorClassIdentifier: 
-  borderIndexes:
-    keys: 00000000010000000200000003000000
-    values:
-    - List: 0300000002000000
-    - List: 000000000100000002000000
-    - List: 0000000002000000
-    - List: 000000000100000003000000
   _blocksLocalCoordinates:
     keys: 00000000010000000200000003000000
     values:
@@ -42,3 +35,5 @@ MonoBehaviour:
       - {x: 1, y: 0}
       - {x: 2, y: 1}
       - {x: 2, y: 0}
+  list:
+    List: []
