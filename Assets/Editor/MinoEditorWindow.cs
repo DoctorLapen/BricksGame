@@ -118,22 +118,7 @@ namespace SuperBricks.Editor
                 mino.BlocksLocalCoordinates.Add(key,vectorList);
                 ShowCollectiction(rotateCoordinates);
             }
-            //Border Bottom
-            IntList bordersIndexes =new IntList();
-            bordersIndexes.List.AddRange(CalculateBottomBordersIndexes(localCoordinates));
-            mino.BorderIndexes.Add(MinoSide.Bottom,bordersIndexes);
-            //Border Left
-             bordersIndexes =new IntList();
-            bordersIndexes.List.AddRange(CalculateLeftBordersIndexes(localCoordinates));
-            mino.BorderIndexes.Add(MinoSide.Left,bordersIndexes);
-            //Border Top
-            bordersIndexes =new IntList();
-            bordersIndexes.List.AddRange(CalculateTopBordersIndexes(localCoordinates));
-            mino.BorderIndexes.Add(MinoSide.Top,bordersIndexes);
-            //Border right
-            bordersIndexes =new IntList();
-            bordersIndexes.List.AddRange(CalculateRightBordersIndexes(localCoordinates));
-            mino.BorderIndexes.Add(MinoSide.Right,bordersIndexes);
+            
             
             SaveMinoAsset(mino);
         }
@@ -166,51 +151,9 @@ namespace SuperBricks.Editor
             return rotateCoordinates;
         }
 
-        private static List<int> CalculateLeftBordersIndexes(List<Vector2Int> localCoordinates)
-        {
-            Func<Vector2Int,int> func1 = v => v.y;
-            Func<IGrouping<int, Vector2Int>, int> func2 = g => g.Min(v => v.x);
-            Func<Vector2Int, VectorsSupportItem, bool> func3 = (v, item) => v.x == item.maxItemB;
-            
-            return  CalculateBordersIndexes(localCoordinates,func1,func2,func3);
-        }
-        private static List<int> CalculateRightBordersIndexes(List<Vector2Int> localCoordinates)
-        {
-            Func<Vector2Int,int> func1 = v => v.y;
-            Func<IGrouping<int, Vector2Int>, int> func2 = g => g.Max(v => v.x);
-            Func<Vector2Int, VectorsSupportItem, bool> func3 = (v, item) => v.x == item.maxItemB;
-            
-            return  CalculateBordersIndexes(localCoordinates,func1,func2,func3);
-        }
+       
 
-        private static List<int> CalculateTopBordersIndexes(List<Vector2Int> localCoordinates)
-        {
-            Func<Vector2Int,int> func1 = v => v.x;
-            Func<IGrouping<int, Vector2Int>, int> func2 = g => g.Min(v => v.y);
-            Func<Vector2Int, VectorsSupportItem, bool> func3 = (v, item) => v.y == item.maxItemB;
-            
-            return  CalculateBordersIndexes(localCoordinates,func1,func2,func3);
-        }
-        private static List<int> CalculateBottomBordersIndexes(List<Vector2Int> localCoordinates)
-        {
-            Func<Vector2Int,int> func1 = v => v.x;
-            Func<IGrouping<int, Vector2Int>, int> func2 = g => g.Max(v => v.y);
-            Func<Vector2Int, VectorsSupportItem, bool> func3 = (v, item) => v.y == item.maxItemB;
-            
-           return  CalculateBordersIndexes(localCoordinates,func1,func2,func3);
-        }
-
-        private static List<int> CalculateBordersIndexes(List<Vector2Int> localCoordinates,Func<Vector2Int,int> func1,Func<IGrouping<int,Vector2Int>,int>  func2,Func <Vector2Int,VectorsSupportItem,bool>func3)
-        {
-            var groups = localCoordinates.GroupBy(func1);
-            var maxBsItems = groups.Select(func2);
-            var borders = groups.Zip(maxBsItems, (g, maxB) =>
-                    new  VectorsSupportItem{vectors = g.Select(v => v), maxItemB = maxB})
-                .Select(item => item.vectors.First(v =>func3(v,item)));
-            List<int> bordersIndexes= borders.Select(vector => localCoordinates.IndexOf(vector)).ToList();
-            
-            return bordersIndexes;
-        }
+       
 
         private static void SaveMinoAsset(Mino mino)
         {
@@ -251,11 +194,7 @@ namespace SuperBricks.Editor
         }
 
 
-        private class VectorsSupportItem
-        {
-            public IEnumerable< Vector2Int> vectors;
-            public int maxItemB;
-        }
+       
 
 
 
