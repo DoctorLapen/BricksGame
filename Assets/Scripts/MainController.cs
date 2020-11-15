@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using UnityEngine;
 using Zenject;
@@ -39,7 +40,8 @@ namespace SuperBricks
         
         private void Start()
         {
-           Mino newMino =  SelectRandomMino();
+            Mino newMino =  SelectRandomMino();
+           
            if (IsGameOver(newMino))
            {
                SpawnMino(newMino);
@@ -48,7 +50,7 @@ namespace SuperBricks
            {
                Debug.Log("GameOver");
            }
-
+           _minoModel.BlocksCoordinates.CollectionChanged += MoveSprite;
            InitializeCorrectKeyCodes();
 
         }
@@ -81,7 +83,7 @@ namespace SuperBricks
                 {
                     if (IsRotatePossible(checkBlockCoordinates))
                     {
-                        RotateMino();
+                        _minoModel.Rotate();
                     }
 
                     
@@ -135,7 +137,7 @@ namespace SuperBricks
                 isMovingPossible = IsMovePossible(direction,_minoModel.BlocksCoordinates);
                 if (isMovingPossible)
                 {
-                    MoveMino(direction);
+                    _minoModel.Move(direction);
                 }
             }
 
@@ -147,7 +149,7 @@ namespace SuperBricks
 
         private void UpdateGameState()
         {
-            AddMinoToFieldModel();
+            _fieldModel.AddMino(_minoModel.BlocksCoordinates);
             List<int> deleteLineIndexes = FindFilledHorizontalLines();
             if (deleteLineIndexes.Count > 0)
             {
@@ -171,7 +173,7 @@ namespace SuperBricks
             _correctInputKeys = new List<KeyCode>() {KeyCode.A,KeyCode.D};
         }
 
-        private bool IsMovePossible(Vector2Int direction, List<Vector2Int> blocksCoordinates)
+        private bool IsMovePossible(Vector2Int direction, IList<Vector2Int> blocksCoordinates)
         {
            
             
@@ -201,7 +203,7 @@ namespace SuperBricks
                     isMovingPossible = IsMovePossible(direction,_minoModel.BlocksCoordinates);
                     if (isMovingPossible)
                     {
-                        MoveMino(direction);
+                        _minoModel.Move(direction);
                         
                     }
                 }
@@ -219,7 +221,7 @@ namespace SuperBricks
         }
 
         
-        private bool IsMoveInField(Vector2Int direction,List<Vector2Int> blocksCoordinates)
+        private bool IsMoveInField(Vector2Int direction,IList<Vector2Int> blocksCoordinates)
         {
            
            
@@ -259,7 +261,7 @@ namespace SuperBricks
             return true;
             
         }
-        private bool IsRotatePossible(List<Vector2Int> blocksCoordinates)
+        private bool IsRotatePossible(IList<Vector2Int> blocksCoordinates)
         {
             
             Vector2Int startBlock = _minoModel.BlocksCoordinates[0];
@@ -276,32 +278,8 @@ namespace SuperBricks
             return true;
         }
 
-        private void MoveMino(Vector2Int direction)
-        {
-            var size = _minoModel.BlocksCoordinates.Count;
-            for (int i = 0; i < size; i++)
-            {
-                Vector2Int oldCoordinate = _minoModel.BlocksCoordinates[i];
-                Vector2Int newCoordinates = oldCoordinate + direction;
-                _minoModel.BlocksCoordinates[i] = newCoordinates;
-                _gridView.MoveSprite(newCoordinates);
-            }
-            
-        }
-        private void RotateMino()
-        {
-            Vector2Int startBlock = _minoModel.BlocksCoordinates[0];
-            _minoModel.RotateMino();
-            var size = _minoModel.BlocksCoordinates.Count;
-            for (int i = 0; i < size; i++)
-            {
-                Vector2Int oldCoordinate = _minoModel.BlocksLocalCoordinates[i];
-                Vector2Int newCoordinates = oldCoordinate + startBlock;
-                _minoModel.BlocksCoordinates[i] = newCoordinates;
-                _gridView.MoveSprite(newCoordinates);
-            }
-            
-        }
+       
+       
         
         
 
@@ -313,6 +291,9 @@ namespace SuperBricks
 
         private void SpawnMino(Mino mino)
         {
+            
+                
+            
             _gridView.ClearMoveBlocks();
             List<Vector2Int> bottomBlockCoordinates = new List<Vector2Int>();
           
@@ -325,7 +306,7 @@ namespace SuperBricks
              }
              
             _minoModel = new MinoModel(bottomBlockCoordinates ,mino);
-          
+
         }
 
         private List<int> FindFilledHorizontalLines()
@@ -390,13 +371,7 @@ namespace SuperBricks
 
        
 
-        private void AddMinoToFieldModel()
-        {
-            foreach (Vector2Int block in _minoModel.BlocksCoordinates)
-            {
-                _fieldModel.FillCell((uint)block.x,(uint)block.y);
-            }
-        }
+       
 
         private bool IsGameOver(Mino mino)
         {
@@ -411,6 +386,11 @@ namespace SuperBricks
             }
 
             return true;
+        }
+
+        private void MoveSprite(object sender, NotifyCollectionChangedEventArgs eventArgs)
+        {
+           _gridView.MoveSprite((Vector2Int)eventArgs.NewItems[0]);
         }
 
 

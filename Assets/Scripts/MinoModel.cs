@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace SuperBricks
 {
     public class MinoModel
     {
-        public List<Vector2Int> BlocksCoordinates => blocksCoordinates;
+        
+        public ObservableCollection<Vector2Int> BlocksCoordinates => blocksCoordinates;
     
         public List<Vector2Int> BlocksLocalCoordinates=> _mino.BlocksLocalCoordinates[_currentRotateDirection];
         private IMino _mino;
 
-        private List<Vector2Int> blocksCoordinates;
+        private ObservableCollection<Vector2Int>  blocksCoordinates;
         private MinoSide _currentRotateDirection;
         
         
@@ -24,14 +26,14 @@ namespace SuperBricks
 
         public MinoModel(List<Vector2Int> blocksCoordinates,IMino mino )
         {
-            this.blocksCoordinates = new List<Vector2Int>(blocksCoordinates);
+            this.blocksCoordinates = new ObservableCollection<Vector2Int>(blocksCoordinates);
             _mino = mino;
 
             InitializeRotateVariables();
 
         }
 
-        public void RotateMino()
+        private void RotateMinoQueue()
         {
             MinoSide oldSide = _minoSides.Dequeue();
             _currentRotateDirection = _minoSides.Peek();
@@ -49,9 +51,36 @@ namespace SuperBricks
             MinoSide newRotateDirection = checkSides.Peek();
             return _mino.BlocksLocalCoordinates[newRotateDirection];
         }
+        public void Move(Vector2Int direction)
+        {
+            var size = BlocksCoordinates.Count;
+            for (int i = 0; i < size; i++)
+            {
+                Vector2Int oldCoordinate = BlocksCoordinates[i];
+                Vector2Int newCoordinates = oldCoordinate + direction;
+                BlocksCoordinates[i] = newCoordinates;
+            }
+            
+        }
+        public void Rotate()
+        {
+            Vector2Int startBlock = BlocksCoordinates[0];
+            RotateMinoQueue();
+            var size = BlocksCoordinates.Count;
+            for (int i = 0; i < size; i++)
+            {
+                Vector2Int oldCoordinate = BlocksLocalCoordinates[i];
+                Vector2Int newCoordinates = oldCoordinate + startBlock;
+                BlocksCoordinates[i] = newCoordinates;
+               
+            }
+            
+        }
         
 
-        
+
+
+
 
         private void InitializeRotateVariables()
         {
