@@ -79,7 +79,7 @@ namespace SuperBricks
             if (Input.GetKeyDown(KeyCode.W))
             {
                 List<Vector2Int> checkBlockCoordinates = _minoModel.GetCheckBlockCoordinates();
-                if (IsRotateInField(checkBlockCoordinates))
+                if (_fieldModel.IsRotateInField(_minoModel.BlocksCoordinates[0],checkBlockCoordinates))
                 {
                     if (IsRotatePossible(checkBlockCoordinates))
                     {
@@ -130,7 +130,7 @@ namespace SuperBricks
 
         private void MoveMinoWithChecking(MinoSide side, Vector2Int direction)
         {
-            bool isInField = IsMoveInField(direction,_minoModel.BlocksCoordinates);
+            bool isInField = _fieldModel.IsMoveInField(direction,_minoModel.BlocksCoordinates);
             bool isMovingPossible = true;
             if (isInField)
             {
@@ -196,7 +196,7 @@ namespace SuperBricks
             
             for (int y = _minoModel.BlocksCoordinates[0].y ;y < _mainGameSettings.RowAmount - 1;y++)
             {
-                bool isInField = IsMoveInField(direction,_minoModel.BlocksCoordinates);
+                bool isInField = _fieldModel.IsMoveInField(direction,_minoModel.BlocksCoordinates);
                 bool isMovingPossible = false;
                 if (isInField)
                 {
@@ -221,46 +221,8 @@ namespace SuperBricks
         }
 
         
-        private bool IsMoveInField(Vector2Int direction,IList<Vector2Int> blocksCoordinates)
-        {
-           
-           
-            int startCoordinate = 0;
-            foreach (Vector2Int coordinate in blocksCoordinates)
-            {
-                Vector2Int newCoordinate = coordinate  + direction;
-                bool isXInField = startCoordinate <= newCoordinate.x  && newCoordinate.x  < _mainGameSettings.ColumnAmount ;
-                bool isYInField = startCoordinate <= newCoordinate.y  && newCoordinate.y  < _mainGameSettings.RowAmount ;
-              
-                if (!(isXInField && isYInField))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-            
-        }
-        private bool IsRotateInField(List<Vector2Int> blocksCoordinates)
-        {
-            Vector2Int startBlock = _minoModel.BlocksCoordinates[0];
-
-            int startCoordinate = 0;
-            foreach (Vector2Int blockCoordinates in blocksCoordinates)
-            {
-                Vector2Int coordinate = startBlock + blockCoordinates;
-                bool isXInField = startCoordinate <= coordinate.x  && coordinate.x  < _mainGameSettings.ColumnAmount ;
-                bool isYInField = startCoordinate <= coordinate.y  && coordinate.y  < _mainGameSettings.RowAmount ;
-              
-                if (!(isXInField && isYInField))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-            
-        }
+      
+       
         private bool IsRotatePossible(IList<Vector2Int> blocksCoordinates)
         {
             

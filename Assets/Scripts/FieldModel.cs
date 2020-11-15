@@ -43,6 +43,32 @@ namespace SuperBricks
                 FillCell((uint)block.x,(uint)block.y);
             }
         }
+       public bool IsMoveInField(Vector2Int direction,IList<Vector2Int> blocksCoordinates)
+        {
+           
+           
+            int startCoordinate = 0;
+            foreach (Vector2Int coordinate in blocksCoordinates)
+            {
+                Vector2Int newCoordinate = coordinate  + direction;
+                bool isXInField = startCoordinate <= newCoordinate.x  && newCoordinate.x  < _mainGameSettings.ColumnAmount ;
+                bool isYInField = startCoordinate <= newCoordinate.y  && newCoordinate.y  < _mainGameSettings.RowAmount ;
+              
+                if (!(isXInField && isYInField))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+            
+        }
+        public bool IsRotateInField( Vector2Int startBlock,List<Vector2Int> blocksCoordinates)
+        {
+            return  IsMoveInField(startBlock, blocksCoordinates);
+
+        }
+       
         
     }
 }

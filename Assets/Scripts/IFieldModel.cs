@@ -10,5 +10,7 @@ namespace SuperBricks
         void MakeCellEmpty(uint x, uint y);
         CellType GetCell(uint x, uint y);
         void AddMino(IList<Vector2Int> blocksCoordinates);
+        bool IsMoveInField(Vector2Int direction,IList<Vector2Int> blocksCoordinates);
+        bool IsRotateInField( Vector2Int startBlock,List<Vector2Int> blocksCoordinates);
     }
 }
