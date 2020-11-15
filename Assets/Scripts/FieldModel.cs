@@ -1,4 +1,7 @@
-﻿namespace SuperBricks
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+namespace SuperBricks
 {
     public class FieldModel : IFieldModel
     {
@@ -32,5 +35,14 @@
         {
             return _field[x, y];
         }
+
+        public void AddMino(IList<Vector2Int> blocksCoordinates)
+        {
+            foreach (Vector2Int block in blocksCoordinates)
+            {
+                FillCell((uint)block.x,(uint)block.y);
+            }
+        }
+        
     }
 }
