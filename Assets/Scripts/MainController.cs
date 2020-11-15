@@ -81,7 +81,7 @@ namespace SuperBricks
                 List<Vector2Int> checkBlockCoordinates = _minoModel.GetCheckBlockCoordinates();
                 if (_fieldModel.IsRotateInField(_minoModel.BlocksCoordinates[0],checkBlockCoordinates))
                 {
-                    if (IsRotatePossible(checkBlockCoordinates))
+                    if (_fieldModel.IsRotatePossible(_minoModel.BlocksCoordinates[0],checkBlockCoordinates))
                     {
                         _minoModel.Rotate();
                     }
@@ -134,7 +134,7 @@ namespace SuperBricks
             bool isMovingPossible = true;
             if (isInField)
             {
-                isMovingPossible = IsMovePossible(direction,_minoModel.BlocksCoordinates);
+                isMovingPossible = _fieldModel.IsMovePossible(direction,_minoModel.BlocksCoordinates);
                 if (isMovingPossible)
                 {
                     _minoModel.Move(direction);
@@ -173,22 +173,7 @@ namespace SuperBricks
             _correctInputKeys = new List<KeyCode>() {KeyCode.A,KeyCode.D};
         }
 
-        private bool IsMovePossible(Vector2Int direction, IList<Vector2Int> blocksCoordinates)
-        {
-           
-            
-            foreach (Vector2Int coordinate in blocksCoordinates)
-            {
-                Vector2Int newCoordinate = coordinate + direction;
-                bool isCellEmpty = _fieldModel.IsCellEmpty((uint)newCoordinate.x,(uint) newCoordinate.y);
-               if (!isCellEmpty)
-               {
-                   return false;
-               }
-            }
-
-            return true;
-        }
+       
         private void MoveMinoToBottomEnd()
         {
             Vector2Int direction = new Vector2Int(0,1);
@@ -200,7 +185,7 @@ namespace SuperBricks
                 bool isMovingPossible = false;
                 if (isInField)
                 {
-                    isMovingPossible = IsMovePossible(direction,_minoModel.BlocksCoordinates);
+                    isMovingPossible = _fieldModel.IsMovePossible(direction,_minoModel.BlocksCoordinates);
                     if (isMovingPossible)
                     {
                         _minoModel.Move(direction);
@@ -223,25 +208,8 @@ namespace SuperBricks
         
       
        
-        private bool IsRotatePossible(IList<Vector2Int> blocksCoordinates)
-        {
-            
-            Vector2Int startBlock = _minoModel.BlocksCoordinates[0];
-            foreach (Vector2Int blockCoordinates in blocksCoordinates)
-            {
-                Vector2Int coordinate = startBlock + blockCoordinates;
-                bool isCellEmpty = _fieldModel.IsCellEmpty((uint)coordinate.x,(uint) coordinate.y);
-                if (!isCellEmpty)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
        
-       
+
         
         
 

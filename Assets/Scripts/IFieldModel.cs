@@ -12,5 +12,7 @@ namespace SuperBricks
         void AddMino(IList<Vector2Int> blocksCoordinates);
         bool IsMoveInField(Vector2Int direction,IList<Vector2Int> blocksCoordinates);
         bool IsRotateInField( Vector2Int startBlock,List<Vector2Int> blocksCoordinates);
+        bool IsMovePossible(Vector2Int direction, IList<Vector2Int> blocksCoordinates);
+        bool IsRotatePossible( Vector2Int startBlock,IList<Vector2Int> blocksCoordinates);
     }
 }

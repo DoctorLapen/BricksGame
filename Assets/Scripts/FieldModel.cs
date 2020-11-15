@@ -68,6 +68,26 @@ namespace SuperBricks
             return  IsMoveInField(startBlock, blocksCoordinates);
 
         }
+       public bool IsMovePossible(Vector2Int direction, IList<Vector2Int> blocksCoordinates)
+        {
+           
+            
+            foreach (Vector2Int coordinate in blocksCoordinates)
+            {
+                Vector2Int newCoordinate = coordinate + direction;
+                bool isCellEmpty = IsCellEmpty((uint)newCoordinate.x,(uint) newCoordinate.y);
+                if (!isCellEmpty)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        public bool IsRotatePossible( Vector2Int startBlock,IList<Vector2Int> blocksCoordinates)
+        {
+            return IsMovePossible(startBlock, blocksCoordinates);
+        }
        
         
     }
