@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SuperBricks
 {
     public class FieldModel : IFieldModel
     {
+        public event Action<CellChangedEventArgs<CellType>> CellChanged;
         private IMainGameSettings _mainGameSettings;
         private CellType[,] _field;
 
@@ -25,11 +27,13 @@ namespace SuperBricks
         public void FillCell(uint x,uint y)
         {
             _field[x, y] = CellType.Filled;
+            CellChanged?.Invoke(new CellChangedEventArgs<CellType>((int)x,(int)y,CellType.Filled));
         }
 
         public void MakeCellEmpty(uint x, uint y)
         {
             _field[x, y] = CellType.Empty;
+            CellChanged?.Invoke(new CellChangedEventArgs<CellType>((int)x,(int)y,CellType.Empty));
         }
         public CellType GetCell(uint x, uint y)
         {
@@ -116,7 +120,63 @@ namespace SuperBricks
             }
             return distance;
         }
+        public List<int> FindFilledHorizontalLines()
+        {
+            List<int> lineIndexes = new List<int>();
+            int startRowIndex =(int) _mainGameSettings.RowAmount - 1;
+            for (int row = startRowIndex; row >= 0; row--)
+            {
+                for (int column = 0; column < _mainGameSettings.ColumnAmount; column++)
+                {
+                    if (IsCellEmpty((uint) column, (uint) row))
+                    {
+                        break;
+                    }
+                    if (column == _mainGameSettings.ColumnAmount - 1)
+                    {
+                        lineIndexes.Add(row);
+                    }
+                }
+            }
+
+            return lineIndexes;
+        }
+        public void DeleteHorizontalLines(List<int> lineIndexes)
+        {
+            foreach (int lineIndex in lineIndexes)
+            {
+                for (int column = 0; column < _mainGameSettings.ColumnAmount; column++)
+                {
+                    MakeCellEmpty((uint)column,(uint)lineIndex);
+                }
+            }
+        }
+        public void MoveLinesDown(List<int> lineIndexes)
+        {
+            foreach (int lineIndex in lineIndexes)
+            {
+                int emptyLineIndex = lineIndex;
+                for (int moveLineIndex = lineIndex - 1; moveLineIndex != -1; moveLineIndex--)
+                {
+                    for (int column = 0; column < _mainGameSettings.ColumnAmount; column++)
+                    {
+
+                        if (IsCellEmpty((uint) column, (uint) moveLineIndex))
+                        {
+                            MakeCellEmpty((uint) column,(uint) moveLineIndex);
+                            FillCell((uint) column,(uint) emptyLineIndex);
+                           
+                        }
+                    }
+
+                    emptyLineIndex--;
+                    
+                }
+            }
+        }
        
         
     }
+
+    
 }
