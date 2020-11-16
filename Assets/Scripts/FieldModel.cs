@@ -81,12 +81,40 @@ namespace SuperBricks
                     return false;
                 }
             }
-
             return true;
         }
         public bool IsRotatePossible( Vector2Int startBlock,IList<Vector2Int> blocksCoordinates)
         {
             return IsMovePossible(startBlock, blocksCoordinates);
+        }
+        public Vector2Int CalculateDistanceToBottom(IList<Vector2Int> blocksCoordinates)
+        {
+            Vector2Int direction = new Vector2Int(0,1);
+            Vector2Int distance = Vector2Int.zero;
+            List<Vector2Int> minoCoordinates = new List<Vector2Int>( blocksCoordinates);
+            
+            for (int y = minoCoordinates[0].y ;y < _mainGameSettings.RowAmount - 1;y++)
+            {
+                bool isInField = IsMoveInField(direction,minoCoordinates);
+                bool isMovingPossible = false;
+                if (isInField)
+                {
+                    isMovingPossible = IsMovePossible(direction,minoCoordinates);
+                    if (isMovingPossible)
+                    {
+                        for (int index = 0; index < minoCoordinates.Count; index++)
+                        {
+                            minoCoordinates[index] += direction;
+                        }
+                        distance += direction;
+                    }
+                }
+                if(!isInField || !isMovingPossible)
+                {
+                    break;
+                }
+            }
+            return distance;
         }
        
         

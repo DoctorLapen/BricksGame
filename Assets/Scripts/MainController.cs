@@ -92,7 +92,8 @@ namespace SuperBricks
             }
             if (Input.GetKeyDown(KeyCode.S))
             {
-                 MoveMinoToBottomEnd();
+                 Vector2Int distance = _fieldModel.CalculateDistanceToBottom(_minoModel.BlocksCoordinates);
+                 _minoModel.Move(distance);
                  UpdateGameState();
             }
 
@@ -172,47 +173,6 @@ namespace SuperBricks
         {
             _correctInputKeys = new List<KeyCode>() {KeyCode.A,KeyCode.D};
         }
-
-       
-        private void MoveMinoToBottomEnd()
-        {
-            Vector2Int direction = new Vector2Int(0,1);
-
-            
-            for (int y = _minoModel.BlocksCoordinates[0].y ;y < _mainGameSettings.RowAmount - 1;y++)
-            {
-                bool isInField = _fieldModel.IsMoveInField(direction,_minoModel.BlocksCoordinates);
-                bool isMovingPossible = false;
-                if (isInField)
-                {
-                    isMovingPossible = _fieldModel.IsMovePossible(direction,_minoModel.BlocksCoordinates);
-                    if (isMovingPossible)
-                    {
-                        _minoModel.Move(direction);
-                        
-                    }
-                }
-                
-               
-                if(!isInField || !isMovingPossible)
-                {
-                   
-                    break;
-                }
-
-            }
-            
-
-        }
-
-        
-      
-       
-       
-
-        
-        
-
         private Mino SelectRandomMino()
         {
             int minoIndex = Random.Range(FIRST_INDEX, _minos.Length);
@@ -221,9 +181,6 @@ namespace SuperBricks
 
         private void SpawnMino(Mino mino)
         {
-            
-                
-            
             _gridView.ClearMoveBlocks();
             List<Vector2Int> bottomBlockCoordinates = new List<Vector2Int>();
           
@@ -298,11 +255,7 @@ namespace SuperBricks
                 }
             }
         }
-
-       
-
-       
-
+        
         private bool IsGameOver(Mino mino)
         {
             foreach (Vector2Int localCoordinate in mino.BlocksLocalCoordinates[MinoSide.Bottom])
