@@ -50,7 +50,6 @@ namespace SuperBricks
            {
                Debug.Log("GameOver");
            }
-           _minoModel.BlocksCoordinates.CollectionChanged += MoveSprite;
            InitializeCorrectKeyCodes();
 
         }
@@ -191,8 +190,15 @@ namespace SuperBricks
                  _gridView.SpawnSprite(cell);
             
              }
+
+             MinoModel previousMinoModel = _minoModel;
              
             _minoModel = new MinoModel(bottomBlockCoordinates ,mino);
+            _minoModel.BlocksCoordinates.CollectionChanged += MoveSprite;
+            if (previousMinoModel != null)
+            {
+                previousMinoModel.BlocksCoordinates.CollectionChanged -= MoveSprite;
+            }
 
         }
 
