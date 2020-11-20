@@ -10,30 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b68276234a7475e9ba3dbcdbcec7f35, type: 3}
-  m_Name: Mino
+  m_Name: Z_Mino_One
   m_EditorClassIdentifier: 
   _blocksLocalCoordinates:
     keys: 00000000010000000200000003000000
     values:
     - List:
       - {x: 0, y: 0}
+      - {x: 1, y: 0}
+      - {x: 1, y: 1}
+      - {x: 2, y: 1}
+    - List:
+      - {x: 0, y: 0}
       - {x: 0, y: 1}
+      - {x: -1, y: 1}
       - {x: -1, y: 2}
-      - {x: 0, y: 2}
     - List:
       - {x: 0, y: 0}
       - {x: -1, y: 0}
+      - {x: -1, y: -1}
       - {x: -2, y: -1}
-      - {x: -2, y: 0}
     - List:
       - {x: 0, y: 0}
       - {x: 0, y: -1}
+      - {x: 1, y: -1}
       - {x: 1, y: -2}
-      - {x: 0, y: -2}
-    - List:
-      - {x: 0, y: 0}
-      - {x: 1, y: 0}
-      - {x: 2, y: 1}
-      - {x: 2, y: 0}
-  list:
-    List: []
