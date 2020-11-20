@@ -35,7 +35,7 @@ namespace SuperBricks
             _field[x, y] = CellType.Empty;
             CellChanged?.Invoke(new CellChangedEventArgs<CellType>((int)x,(int)y,CellType.Empty));
         }
-        public CellType GetCell(uint x, uint y)
+        public CellType GetCell(int x, int y)
         {
             return _field[x, y];
         }
@@ -141,38 +141,33 @@ namespace SuperBricks
 
             return lineIndexes;
         }
-        public void DeleteHorizontalLines(List<int> lineIndexes)
-        {
-            foreach (int lineIndex in lineIndexes)
-            {
-                for (int column = 0; column < _mainGameSettings.ColumnAmount; column++)
-                {
-                    MakeCellEmpty((uint)column,(uint)lineIndex);
-                }
-            }
-        }
+       
         public void MoveLinesDown(List<int> lineIndexes)
         {
+            int linesDeleted = 0;
             foreach (int lineIndex in lineIndexes)
             {
-                int emptyLineIndex = lineIndex;
+                int emptyLineIndex = lineIndex + linesDeleted;
                 for (int moveLineIndex = lineIndex - 1; moveLineIndex != -1; moveLineIndex--)
                 {
                     for (int column = 0; column < _mainGameSettings.ColumnAmount; column++)
                     {
-
-                        if (IsCellEmpty((uint) column, (uint) moveLineIndex))
-                        {
-                            MakeCellEmpty((uint) column,(uint) moveLineIndex);
-                            FillCell((uint) column,(uint) emptyLineIndex);
-                           
-                        }
+                        CellType celltype = GetCell(column, moveLineIndex);
+                        MakeCell(column, emptyLineIndex, celltype);
+                        Debug.Log($"{column} - {emptyLineIndex}  {celltype}");
                     }
 
                     emptyLineIndex--;
                     
                 }
+
+                linesDeleted++;
             }
+        }
+        private void MakeCell(int x, int y,CellType cellType)
+        {
+            _field[x, y] = cellType;
+            CellChanged?.Invoke(new CellChangedEventArgs<CellType>(x,y,cellType));
         }
        
         

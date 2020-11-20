@@ -30,6 +30,7 @@ namespace SuperBricks
         private Queue<Transform> _blocksInMove;
 
         private Transform[,] _staticBlocks;
+        private Queue<Transform> deletedBlocks = new Queue<Transform>();
 
 
         private void Awake()
@@ -66,32 +67,43 @@ namespace SuperBricks
             var newY = newCoordinates.y;
             Transform block = _blocksInMove.Dequeue();
             block .localPosition = CalculateCellPosition(newX, newY);
-            _staticBlocks[newX, newY] = block;
             _blocksInMove.Enqueue(block);
+            
         }
-        public void DeleteSprite(Vector2Int coordinate)
+        public void DeleteStaticSprite(int newX, int newY)
         {
-            var newX = coordinate.x;
-            var newY = coordinate.y;
-            Transform block = _staticBlocks[newX, newY] ;
-            Destroy(block.gameObject);
-        }
-        public Transform GetStaticSprite(int x,int y)
-        {
-            var newX = x;
-            var newY = y;
-            return _staticBlocks[newX, newY] ;
-          
-        }
+           
+            if (_staticBlocks[newX, newY] != null)
+            {
+              
+                Transform block = _staticBlocks[newX, newY];
+                block.gameObject.SetActive(false);
+                deletedBlocks.Enqueue(block);
+                _staticBlocks[newX, newY] = null;
+            }
 
-        public void MoveStaticSprite(int newX,int newY,Transform spriteTransform)
+        }
+      
+
+        public void MoveStaticSprite(int newX, int newY)
         {
-            spriteTransform.localPosition = CalculateCellPosition(newX, newY);
-            _staticBlocks[newX, newY] = spriteTransform;
+            DeleteStaticSprite( newX , newY);
+            Transform  block = deletedBlocks.Dequeue();
+            block.gameObject.SetActive(true);
+            block.localPosition = CalculateCellPosition(newX, newY);
+            _staticBlocks[newX, newY] = block;
         }
 
         public void ClearMoveBlocks()
         {
+            int size = _blocksInMove.Count;
+            for (int i = 0; i < size; i++)
+            {
+                Transform block = _blocksInMove.Dequeue();
+                block.gameObject.SetActive(false);
+                deletedBlocks.Enqueue(block);
+            }
+            
             _blocksInMove.Clear();
         }
     }

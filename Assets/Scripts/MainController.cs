@@ -40,6 +40,7 @@ namespace SuperBricks
         
         private void Start()
         {
+            _fieldModel.CellChanged += ChangeStaticSprite;
             Mino newMino =  SelectRandomMino();
            
            if (IsGameOver(newMino))
@@ -53,14 +54,6 @@ namespace SuperBricks
            InitializeCorrectKeyCodes();
 
         }
-
-        private void Awake()
-        {
-            if (Input.touchCount > 0)
-            {
-            }
-        }
-
         private void Update()
         {
             if (TARGET_TIME_AMOUNT < _currentTimeAmount)
@@ -123,9 +116,7 @@ namespace SuperBricks
                 }
                 
             }
-
-
-
+            
         }
 
         private void MoveMinoWithChecking(MinoSide side, Vector2Int direction)
@@ -149,12 +140,14 @@ namespace SuperBricks
 
         private void UpdateGameState()
         {
+            _gridView.ClearMoveBlocks();
             _fieldModel.AddMino(_minoModel.BlocksCoordinates);
             List<int> deleteLineIndexes = _fieldModel.FindFilledHorizontalLines();
             if (deleteLineIndexes.Count > 0)
             {
-              //  _fieldModel.DeleteHorizontalLines(deleteLineIndexes);
+                
                 _fieldModel.MoveLinesDown(deleteLineIndexes);
+                
             }
 
             Mino newMino = SelectRandomMino();
@@ -180,7 +173,6 @@ namespace SuperBricks
 
         private void SpawnMino(Mino mino)
         {
-            _gridView.ClearMoveBlocks();
             List<Vector2Int> bottomBlockCoordinates = new List<Vector2Int>();
           
              foreach (var localBlockCoordinates in mino.BlocksLocalCoordinates[MinoSide.Bottom])
@@ -219,6 +211,18 @@ namespace SuperBricks
         private void MoveSprite(object sender, NotifyCollectionChangedEventArgs eventArgs)
         {
            _gridView.MoveSprite((Vector2Int)eventArgs.NewItems[0]);
+        }
+
+        private void ChangeStaticSprite(CellChangedEventArgs<CellType> eventArgs)
+        {
+            if (eventArgs.cellObject == CellType.Empty)
+            {
+                _gridView.DeleteStaticSprite(eventArgs.x,eventArgs.y);
+            }
+            else if (eventArgs.cellObject == CellType.Filled)
+            {
+                _gridView.MoveStaticSprite(eventArgs.x,eventArgs.y);
+            }
         }
 
 

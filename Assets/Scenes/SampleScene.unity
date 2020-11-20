@@ -7033,7 +7033,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _minos:
-  - {fileID: 11400000, guid: 0eab907397b6a794a8607a1ed4663f67, type: 2}
+  - {fileID: 11400000, guid: 271731e0bba3d2e4fac8b0f5f9a03343, type: 2}
   _minoFallSpeed: 2
   _spawnCell: {x: 3, y: 0}
 --- !u!4 &772008672
