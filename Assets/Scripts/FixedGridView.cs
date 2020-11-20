@@ -22,18 +22,18 @@ namespace SuperBricks
         private float _verticalOffset;
         
         private Vector3 _startPosition;
-        private Queue<Transform> _blocksInMove;
+        private Queue<SpriteRenderer> _blocksInMove;
 
-        private Transform[,] _staticBlocks;
-        private Queue<Transform> _deletedBlocks = new Queue<Transform>();
+        private SpriteRenderer[,] _staticBlocks;
+        private Queue<SpriteRenderer> _deletedBlocks = new Queue<SpriteRenderer>();
        
 
 
         private void Awake()
         {
-            _blocksInMove = new Queue<Transform>();
+            _blocksInMove = new Queue<SpriteRenderer>();
             _startPosition = _startPoint.localPosition;
-            _staticBlocks = new Transform[_mainGameSettings.ColumnAmount,_mainGameSettings.RowAmount];
+            _staticBlocks = new SpriteRenderer[_mainGameSettings.ColumnAmount,_mainGameSettings.RowAmount];
             
 
         }
@@ -49,20 +49,22 @@ namespace SuperBricks
 
         }
 
-        public void SpawnSprite(Vector2Int coord)
+        public void SpawnSprite(Vector2Int coord, Color spriteColor)
         {
             Vector3 spawnPosition = CalculateCellPosition(coord.x, coord.y);
-            Transform block = Instantiate(_cellPrefab, spawnPosition, Quaternion.identity,transform).transform;
+            SpriteRenderer block = Instantiate(_cellPrefab, spawnPosition, Quaternion.identity,transform);
+            block.color = spriteColor;
             _blocksInMove.Enqueue(block);
         }
 
 
-        public void MoveSprite(Vector2Int newCoordinates)
+        public void MoveSprite(Vector2Int newCoordinates, Color spriteColor)
         {
             var newX = newCoordinates.x;
             var newY = newCoordinates.y;
-            Transform block = _blocksInMove.Dequeue();
-            block .localPosition = CalculateCellPosition(newX, newY);
+            SpriteRenderer block = _blocksInMove.Dequeue();
+            block.color = spriteColor;
+            block.transform.localPosition = CalculateCellPosition(newX, newY);
             _blocksInMove.Enqueue(block);
             
         }
@@ -72,7 +74,7 @@ namespace SuperBricks
             if (_staticBlocks[newX, newY] != null)
             {
               
-                Transform block = _staticBlocks[newX, newY];
+                SpriteRenderer block = _staticBlocks[newX, newY];
                 block.gameObject.SetActive(false);
                 _deletedBlocks.Enqueue(block);
                 _staticBlocks[newX, newY] = null;
@@ -81,12 +83,13 @@ namespace SuperBricks
         }
       
 
-        public void MoveStaticSprite(int newX, int newY)
+        public void MoveStaticSprite(int newX, int newY, Color spriteColor)
         {
             DeleteStaticSprite( newX , newY);
-            Transform  block = _deletedBlocks.Dequeue();
+            SpriteRenderer  block = _deletedBlocks.Dequeue();
             block.gameObject.SetActive(true);
-            block.localPosition = CalculateCellPosition(newX, newY);
+            block.transform.localPosition = CalculateCellPosition(newX, newY);
+            block.color = spriteColor;
             _staticBlocks[newX, newY] = block;
         }
 
@@ -95,7 +98,7 @@ namespace SuperBricks
             int size = _blocksInMove.Count;
             for (int i = 0; i < size; i++)
             {
-                Transform block = _blocksInMove.Dequeue();
+                SpriteRenderer block = _blocksInMove.Dequeue();
                 block.gameObject.SetActive(false);
                 _deletedBlocks.Enqueue(block);
             }

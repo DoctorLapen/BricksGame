@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using UnityEngine;
 using Zenject;
-using Random = UnityEngine.Random;
+
 
 namespace SuperBricks
 {
@@ -16,6 +16,9 @@ namespace SuperBricks
         private IFieldModel _fieldModel;
         [Inject]
         private IMainGameSettings _mainGameSettings;
+
+        [Inject]
+        private IMinoSelector _minoSelector;
         
         private const int FIRST_INDEX = 0;
         private const float TARGET_TIME_AMOUNT= 1f;
@@ -41,7 +44,7 @@ namespace SuperBricks
         private void Start()
         {
             _fieldModel.CellChanged += ChangeStaticSprite;
-            Mino newMino =  SelectRandomMino();
+            IMino newMino =  _minoSelector.SelectRandomMino();
            
            if (IsGameOver(newMino))
            {
@@ -141,7 +144,7 @@ namespace SuperBricks
         private void UpdateGameState()
         {
             _gridView.ClearMoveBlocks();
-            _fieldModel.AddMino(_minoModel.BlocksCoordinates);
+            _fieldModel.AddMino(_minoModel.BlocksCoordinates, _minoModel.Color);
             List<int> deleteLineIndexes = _fieldModel.FindFilledHorizontalLines();
             if (deleteLineIndexes.Count > 0)
             {
@@ -150,7 +153,7 @@ namespace SuperBricks
                 
             }
 
-            Mino newMino = SelectRandomMino();
+            IMino newMino = _minoSelector.SelectRandomMino();
             if (IsGameOver(newMino))
             {
                 SpawnMino(newMino);
@@ -165,19 +168,16 @@ namespace SuperBricks
         {
             _correctInputKeys = new List<KeyCode>() {KeyCode.A,KeyCode.D};
         }
-        private Mino SelectRandomMino()
-        {
-            int minoIndex = Random.Range(FIRST_INDEX, _minos.Length);
-            return _minos[minoIndex];
-        }
+       
 
-        private void SpawnMino(Mino mino)
+        private void SpawnMino(IMino mino)
         {
             
 
              MinoModel previousMinoModel = _minoModel;
-             
-            _minoModel = new MinoModel( mino);
+             Color color = _minoSelector.SelectRandomColor();
+            _minoModel = new MinoModel( mino, color);
+            Debug.Log("ntcnntcn");
             _minoModel.BlocksCoordinates.CollectionChanged += MoveSprite;
             _minoModel.InitializeBlockCoordinates(_spawnCell);
             if (previousMinoModel != null)
@@ -186,7 +186,7 @@ namespace SuperBricks
             }
 
         }
-        private bool IsGameOver(Mino mino)
+        private bool IsGameOver(IMino mino)
         {
             foreach (Vector2Int localCoordinate in mino.BlocksLocalCoordinates[MinoSide.Bottom])
             {
@@ -205,24 +205,24 @@ namespace SuperBricks
         {
             if (eventArgs.Action == NotifyCollectionChangedAction.Add)
             {
-                _gridView.SpawnSprite((Vector2Int)eventArgs.NewItems[0]);
+                _gridView.SpawnSprite((Vector2Int)eventArgs.NewItems[0],_minoModel.Color );
             }
             else if(eventArgs.Action == NotifyCollectionChangedAction.Replace)
             {
-                _gridView.MoveSprite((Vector2Int)eventArgs.NewItems[0]);
+                _gridView.MoveSprite((Vector2Int)eventArgs.NewItems[0], _minoModel.Color);
             }
             
         }
 
-        private void ChangeStaticSprite(CellChangedEventArgs<CellType> eventArgs)
+        private void ChangeStaticSprite(CellChangedEventArgs<ICell> eventArgs)
         {
-            if (eventArgs.cellObject == CellType.Empty)
+            if (eventArgs.cellObject.Type == CellType.Empty)
             {
                 _gridView.DeleteStaticSprite(eventArgs.x,eventArgs.y);
             }
-            else if (eventArgs.cellObject == CellType.Filled)
+            else if (eventArgs.cellObject.Type == CellType.Filled)
             {
-                _gridView.MoveStaticSprite(eventArgs.x,eventArgs.y);
+                _gridView.MoveStaticSprite(eventArgs.x,eventArgs.y, eventArgs.cellObject.Color);
             }
         }
 

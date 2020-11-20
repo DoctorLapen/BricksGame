@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a29de5e2ae3406f9adbbf6032c7e4fa, type: 3}
+  m_Name: MinosData
+  m_EditorClassIdentifier: 
+  _minos:
+  - {fileID: 11400000, guid: 6527704edce349345a534de214b22f84, type: 2}
+  - {fileID: 11400000, guid: 0aae0af7452630f43ba8ab40f58db95d, type: 2}
+  - {fileID: 11400000, guid: 6aa58602f5adad1409c9ef1b0d3a73a9, type: 2}
+  - {fileID: 11400000, guid: c7776060f2d6fbe44898031a9b34a63c, type: 2}
+  - {fileID: 11400000, guid: 11d37dca02bf3f1488fe6c70d3ce3eb0, type: 2}
+  - {fileID: 11400000, guid: ef78c38dc25e36c4185a621e3ae3ff75, type: 2}
+  - {fileID: 11400000, guid: 0a5e8118318f6e74aa77c086042057ff, type: 2}
+  _minoColors:
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0.1359539, b: 1, a: 1}
+  - {r: 0, g: 1, b: 0.05740881, a: 1}
+  - {r: 1, g: 0.9160186, b: 0, a: 1}
+  - {r: 0.5982585, g: 0, b: 1, a: 1}

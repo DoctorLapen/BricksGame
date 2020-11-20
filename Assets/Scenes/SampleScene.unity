@@ -13815,8 +13815,6 @@ MonoBehaviour:
   _startPoint: {fileID: 222370787}
   _horizontalOffset: 0.1
   _verticalOffset: 0.1
-  _columns: 10
-  _rows: 20
 --- !u!4 &1755883682
 Transform:
   m_ObjectHideFlags: 0
@@ -16541,6 +16539,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mainGameSettings: {fileID: 11400000, guid: 51d8fee965b48784a95a7c29239048d3, type: 2}
+  _minosData: {fileID: 11400000, guid: 0b1cb2395d50c7543a029ae39d85e472, type: 2}
 --- !u!4 &2057162261
 Transform:
   m_ObjectHideFlags: 0

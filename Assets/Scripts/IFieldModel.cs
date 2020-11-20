@@ -6,10 +6,10 @@ namespace SuperBricks
 {
     public interface IFieldModel
     {
-        event Action<CellChangedEventArgs<CellType>> CellChanged;
+        event Action<CellChangedEventArgs<ICell>> CellChanged;
         bool IsCellEmpty(uint x,uint y);
 
-        void AddMino(IList<Vector2Int> blocksCoordinates);
+        void AddMino(IList<Vector2Int> blocksCoordinates, Color minoColor);
         bool IsMoveInField(Vector2Int direction,IList<Vector2Int> blocksCoordinates);
         bool IsRotateInField( Vector2Int startBlock,List<Vector2Int> blocksCoordinates);
         bool IsMovePossible(Vector2Int direction, IList<Vector2Int> blocksCoordinates);

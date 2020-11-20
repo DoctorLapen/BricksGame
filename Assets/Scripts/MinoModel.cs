@@ -7,7 +7,8 @@ namespace SuperBricks
 {
     public class MinoModel
     {
-        
+        public Color Color { get; private set; }
+
         public ObservableCollection<Vector2Int> BlocksCoordinates => _blocksCoordinates;
     
         public List<Vector2Int> BlocksLocalCoordinates=> _mino.BlocksLocalCoordinates[_currentRotateDirection];
@@ -24,8 +25,9 @@ namespace SuperBricks
 
         
 
-        public MinoModel(IMino mino )
+        public MinoModel(IMino mino,Color color )
         {
+            Color = color;
             _blocksCoordinates = new ObservableCollection<Vector2Int>();
             _mino = mino;
 

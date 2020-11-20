@@ -6,9 +6,9 @@ namespace SuperBricks
 {
     public class FieldModel : IFieldModel
     {
-        public event Action<CellChangedEventArgs<CellType>> CellChanged;
+        public event Action<CellChangedEventArgs<ICell>> CellChanged;
         private IMainGameSettings _mainGameSettings;
-        private CellType[,] _field;
+        private ICell[,] _field;
 
         public FieldModel(IMainGameSettings mainGameSettings)
         {
@@ -16,35 +16,27 @@ namespace SuperBricks
             uint columns = mainGameSettings.ColumnAmount;
             uint rows = mainGameSettings.RowAmount;
             
-            _field = new CellType[columns, rows];
+            _field = new Cell[columns, rows];
+            InitializeField();
         }
 
         public bool IsCellEmpty(uint x,uint y)
         {
-            return _field[x, y] == CellType.Empty;
+            return _field[x, y].Type == CellType.Empty;
         }
 
-        public void FillCell(uint x,uint y)
-        {
-            _field[x, y] = CellType.Filled;
-            CellChanged?.Invoke(new CellChangedEventArgs<CellType>((int)x,(int)y,CellType.Filled));
-        }
-
-        public void MakeCellEmpty(uint x, uint y)
-        {
-            _field[x, y] = CellType.Empty;
-            CellChanged?.Invoke(new CellChangedEventArgs<CellType>((int)x,(int)y,CellType.Empty));
-        }
-        public CellType GetCell(int x, int y)
+        
+        public ICell GetCell(int x, int y)
         {
             return _field[x, y];
         }
 
-        public void AddMino(IList<Vector2Int> blocksCoordinates)
+        public void AddMino(IList<Vector2Int> blocksCoordinates, Color minoColor)
         {
             foreach (Vector2Int block in blocksCoordinates)
             {
-                FillCell((uint)block.x,(uint)block.y);
+                ICell cell = new Cell(CellType.Filled, minoColor);
+                MakeCell(block.x,block.y,cell);
             }
         }
        public bool IsMoveInField(Vector2Int direction,IList<Vector2Int> blocksCoordinates)
@@ -152,9 +144,10 @@ namespace SuperBricks
                 {
                     for (int column = 0; column < _mainGameSettings.ColumnAmount; column++)
                     {
-                        CellType celltype = GetCell(column, moveLineIndex);
-                        MakeCell(column, emptyLineIndex, celltype);
-                        Debug.Log($"{column} - {emptyLineIndex}  {celltype}");
+                        ICell movingDownCell = GetCell(column, moveLineIndex);
+
+                        MakeCell(column, emptyLineIndex, movingDownCell); ;
+
                     }
 
                     emptyLineIndex--;
@@ -164,13 +157,24 @@ namespace SuperBricks
                 linesDeleted++;
             }
         }
-        private void MakeCell(int x, int y,CellType cellType)
+        private void MakeCell(int x, int y,ICell cell )
         {
-            _field[x, y] = cellType;
-            CellChanged?.Invoke(new CellChangedEventArgs<CellType>(x,y,cellType));
+            _field[x, y] = cell;
+            CellChanged?.Invoke(new CellChangedEventArgs<ICell>(x,y,cell));
         }
-       
-        
+
+        private void InitializeField()
+        {
+            for (int x = 0; x < _mainGameSettings.ColumnAmount; x++)
+            {
+                for (int y = 0; y < _mainGameSettings.RowAmount; y++)
+                {
+                    _field[x,y] = new Cell();
+                }
+            }
+        }
+
+
     }
 
     
