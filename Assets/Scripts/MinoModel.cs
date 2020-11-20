@@ -8,12 +8,12 @@ namespace SuperBricks
     public class MinoModel
     {
         
-        public ObservableCollection<Vector2Int> BlocksCoordinates => blocksCoordinates;
+        public ObservableCollection<Vector2Int> BlocksCoordinates => _blocksCoordinates;
     
         public List<Vector2Int> BlocksLocalCoordinates=> _mino.BlocksLocalCoordinates[_currentRotateDirection];
         private IMino _mino;
 
-        private ObservableCollection<Vector2Int>  blocksCoordinates;
+        private ObservableCollection<Vector2Int>  _blocksCoordinates;
         private MinoSide _currentRotateDirection;
         
         
@@ -24,9 +24,9 @@ namespace SuperBricks
 
         
 
-        public MinoModel(List<Vector2Int> blocksCoordinates,IMino mino )
+        public MinoModel(IMino mino )
         {
-            this.blocksCoordinates = new ObservableCollection<Vector2Int>(blocksCoordinates);
+            _blocksCoordinates = new ObservableCollection<Vector2Int>();
             _mino = mino;
 
             InitializeRotateVariables();
@@ -92,6 +92,15 @@ namespace SuperBricks
 
             _currentRotateDirection = _minoSides.Peek();
 
+        }
+        public void InitializeBlockCoordinates(Vector2Int firstSpawnCell)
+        {
+           
+            foreach (var localBlockCoordinates in _mino.BlocksLocalCoordinates[MinoSide.Bottom])
+            {
+                Vector2Int cell = firstSpawnCell + localBlockCoordinates;
+                _blocksCoordinates.Add(cell);
+            }
         }
         
 

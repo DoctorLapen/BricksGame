@@ -20,17 +20,13 @@ namespace SuperBricks
         private float _horizontalOffset;
         [SerializeField]
         private float _verticalOffset;
-
-        [SerializeField]
-        private uint _columns;
-        [SerializeField]
-        private uint _rows;
-
+        
         private Vector3 _startPosition;
         private Queue<Transform> _blocksInMove;
 
         private Transform[,] _staticBlocks;
-        private Queue<Transform> deletedBlocks = new Queue<Transform>();
+        private Queue<Transform> _deletedBlocks = new Queue<Transform>();
+       
 
 
         private void Awake()
@@ -78,7 +74,7 @@ namespace SuperBricks
               
                 Transform block = _staticBlocks[newX, newY];
                 block.gameObject.SetActive(false);
-                deletedBlocks.Enqueue(block);
+                _deletedBlocks.Enqueue(block);
                 _staticBlocks[newX, newY] = null;
             }
 
@@ -88,7 +84,7 @@ namespace SuperBricks
         public void MoveStaticSprite(int newX, int newY)
         {
             DeleteStaticSprite( newX , newY);
-            Transform  block = deletedBlocks.Dequeue();
+            Transform  block = _deletedBlocks.Dequeue();
             block.gameObject.SetActive(true);
             block.localPosition = CalculateCellPosition(newX, newY);
             _staticBlocks[newX, newY] = block;
@@ -101,7 +97,7 @@ namespace SuperBricks
             {
                 Transform block = _blocksInMove.Dequeue();
                 block.gameObject.SetActive(false);
-                deletedBlocks.Enqueue(block);
+                _deletedBlocks.Enqueue(block);
             }
             
             _blocksInMove.Clear();

@@ -173,20 +173,13 @@ namespace SuperBricks
 
         private void SpawnMino(Mino mino)
         {
-            List<Vector2Int> bottomBlockCoordinates = new List<Vector2Int>();
-          
-             foreach (var localBlockCoordinates in mino.BlocksLocalCoordinates[MinoSide.Bottom])
-             {
-                 Vector2Int cell = _spawnCell + localBlockCoordinates;
-                 bottomBlockCoordinates.Add(cell);
-                 _gridView.SpawnSprite(cell);
             
-             }
 
              MinoModel previousMinoModel = _minoModel;
              
-            _minoModel = new MinoModel(bottomBlockCoordinates ,mino);
+            _minoModel = new MinoModel( mino);
             _minoModel.BlocksCoordinates.CollectionChanged += MoveSprite;
+            _minoModel.InitializeBlockCoordinates(_spawnCell);
             if (previousMinoModel != null)
             {
                 previousMinoModel.BlocksCoordinates.CollectionChanged -= MoveSprite;
@@ -210,7 +203,15 @@ namespace SuperBricks
 
         private void MoveSprite(object sender, NotifyCollectionChangedEventArgs eventArgs)
         {
-           _gridView.MoveSprite((Vector2Int)eventArgs.NewItems[0]);
+            if (eventArgs.Action == NotifyCollectionChangedAction.Add)
+            {
+                _gridView.SpawnSprite((Vector2Int)eventArgs.NewItems[0]);
+            }
+            else if(eventArgs.Action == NotifyCollectionChangedAction.Replace)
+            {
+                _gridView.MoveSprite((Vector2Int)eventArgs.NewItems[0]);
+            }
+            
         }
 
         private void ChangeStaticSprite(CellChangedEventArgs<CellType> eventArgs)
