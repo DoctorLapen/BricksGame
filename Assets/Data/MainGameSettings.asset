@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rowAmount: 20
   _columnAmount: 10
+  _oneLineCost: 100

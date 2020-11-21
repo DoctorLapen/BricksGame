@@ -16,10 +16,14 @@ namespace SuperBricks
         private IFieldModel _fieldModel;
         [Inject]
         private IMainGameSettings _mainGameSettings;
-
         [Inject]
         private IMinoSelector _minoSelector;
-        
+
+        [Inject]
+        private IScoreModel _scoreModel;
+
+        [Inject]
+        private IScoreView _scoreView;
         private const int FIRST_INDEX = 0;
         private const float TARGET_TIME_AMOUNT= 1f;
         [SerializeField]
@@ -43,6 +47,7 @@ namespace SuperBricks
         
         private void Start()
         {
+            _scoreModel.ScoreChange += _scoreView.DisplayScore;
             _fieldModel.CellChanged += ChangeStaticSprite;
             IMino newMino =  _minoSelector.SelectRandomMino();
            
@@ -148,7 +153,7 @@ namespace SuperBricks
             List<int> deleteLineIndexes = _fieldModel.FindFilledHorizontalLines();
             if (deleteLineIndexes.Count > 0)
             {
-                
+                _scoreModel.AddScore(deleteLineIndexes.Count);
                 _fieldModel.MoveLinesDown(deleteLineIndexes);
                 
             }
@@ -177,7 +182,6 @@ namespace SuperBricks
              MinoModel previousMinoModel = _minoModel;
              Color color = _minoSelector.SelectRandomColor();
             _minoModel = new MinoModel( mino, color);
-            Debug.Log("ntcnntcn");
             _minoModel.BlocksCoordinates.CollectionChanged += MoveSprite;
             _minoModel.InitializeBlockCoordinates(_spawnCell);
             if (previousMinoModel != null)

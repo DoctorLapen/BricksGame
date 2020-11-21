@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor.Build.Content;
+using UnityEngine;
 using Zenject;
 
 namespace SuperBricks
@@ -20,6 +21,8 @@ namespace SuperBricks
             Container.Bind<IMainGameSettings>().FromInstance(_mainGameSettings).AsSingle();
             Container.Bind<IMinosData>().FromInstance(_minosData).AsSingle();
             Container.Bind<IMinoSelector>().To<MinoSelector>().AsSingle();
+            Container.Bind<IScoreModel>().To<ScoreModel>().AsSingle().WithArguments((int)_mainGameSettings.OneLineCost);
+            Container.Bind<IScoreData>().To<ScoreData>().AsTransient();
         }
     }
 }

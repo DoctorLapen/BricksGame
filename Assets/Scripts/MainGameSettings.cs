@@ -21,8 +21,10 @@ namespace SuperBricks
             get { return this._columnAmount; }
         }
 
-        
+        [SerializeField]
+        private uint _oneLineCost;
 
-        
+
+        public uint OneLineCost => _oneLineCost;
     }
 }

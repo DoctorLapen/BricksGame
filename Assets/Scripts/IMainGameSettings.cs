@@ -4,5 +4,6 @@
     {
         uint RowAmount { get; }
         uint ColumnAmount { get; }
+        uint OneLineCost { get; }
     }
 }
