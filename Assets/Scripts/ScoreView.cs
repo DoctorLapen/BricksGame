@@ -9,17 +9,16 @@ namespace SuperBricks
         [SerializeField]
         private Text _text;
 
-        [SerializeField]
-        private string _label;
+       
 
         private void Awake()
         {
-            _text.text = $"{_label} 0";
+            _text.text = "0";
         }
 
         public void DisplayScore(int score)
         {
-            _text.text = $"{_label} {score}";
+            _text.text = $"{score}";
         }
     }
 }
