@@ -21,6 +21,16 @@ namespace SuperBricks
             get { return this._minoColors; }
         }
 
+        [SerializeField]
+        private int _amountMinosToShow;
+
+        public int AmountMinosToShow
+        {
+            get { return this._amountMinosToShow; }
+        }
+
+        
+
         
 
         

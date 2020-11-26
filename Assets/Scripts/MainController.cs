@@ -23,7 +23,11 @@ namespace SuperBricks
         private IScoreModel _scoreModel;
 
         [Inject]
+        private INextMinosView _nextMinosView;
+
+        [Inject]
         private IScoreView _scoreView;
+        
         private const int FIRST_INDEX = 0;
         private const float TARGET_TIME_AMOUNT= 1f;
         [SerializeField]
@@ -49,6 +53,7 @@ namespace SuperBricks
         {
             _scoreModel.ScoreChange += _scoreView.DisplayScore;
             _fieldModel.CellChanged += ChangeStaticSprite;
+            _minoSelector.MinoAdded += OnMinoAddedInSelector;
             IMino newMino =  _minoSelector.SelectRandomMino();
            
            if (IsGameOver(newMino))
@@ -62,6 +67,13 @@ namespace SuperBricks
            InitializeCorrectKeyCodes();
 
         }
+
+        private void OnMinoAddedInSelector(IMino mino)
+        {
+            _nextMinosView.SpawnMino(mino.BlocksLocalCoordinates[MinoSide.Bottom]);
+            
+        }
+
         private void Update()
         {
             if (TARGET_TIME_AMOUNT < _currentTimeAmount)

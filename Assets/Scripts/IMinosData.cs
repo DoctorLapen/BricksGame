@@ -6,5 +6,6 @@ namespace SuperBricks
     {
         Mino[] Minos { get; }
         Color[] MinoColors { get; }
+        int AmountMinosToShow { get; }
     }
 }

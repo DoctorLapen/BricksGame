@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace SuperBricks
 {
@@ -6,5 +7,6 @@ namespace SuperBricks
     {
         IMino SelectRandomMino();
         Color SelectRandomColor();
+        event Action<IMino> MinoAdded;
     }
 }
