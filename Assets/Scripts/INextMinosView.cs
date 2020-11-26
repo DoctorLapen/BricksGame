@@ -5,6 +5,6 @@ namespace SuperBricks
 {
     public interface INextMinosView
     {
-        void SpawnMino(List<Vector2Int> blockCoordinates);
+        void SpawnMinos(List<List<Vector2Int>>blockCoordinates);
     }
 }

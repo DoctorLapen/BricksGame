@@ -68,10 +68,14 @@ namespace SuperBricks
 
         }
 
-        private void OnMinoAddedInSelector(IMino mino)
+        private void OnMinoAddedInSelector(IList<IMino> minos)
         {
-            _nextMinosView.SpawnMino(mino.BlocksLocalCoordinates[MinoSide.Bottom]);
-            
+            List<List<Vector2Int>> minosCoordinatesLists = new List<List<Vector2Int>>();
+            foreach (var mino in minos)
+            {
+                minosCoordinatesLists.Add(mino.BlocksLocalCoordinates[MinoSide.Bottom]);
+            }
+            _nextMinosView.SpawnMinos(minosCoordinatesLists);
         }
 
         private void Update()

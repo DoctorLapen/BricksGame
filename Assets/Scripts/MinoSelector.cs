@@ -7,7 +7,7 @@ namespace SuperBricks
 {
     public class MinoSelector : IMinoSelector
     {
-        public event Action<IMino> MinoAdded; 
+        public event Action<IList<IMino>> MinoAdded; 
         public event Action<Color> ColorAdded; 
         private  IMinosData _minosData;
         private Queue<IMino> _selectedMinos = new Queue<IMino>();
@@ -42,7 +42,7 @@ namespace SuperBricks
         private void AddToMinoQueue(IMino mino)
         {
             _selectedMinos.Enqueue(mino);
-            MinoAdded?.Invoke(mino);
+            MinoAdded?.Invoke( new List<IMino>(_selectedMinos));
         }
         private void AddToColorQueue(Color color)
         {
@@ -55,9 +55,10 @@ namespace SuperBricks
             for (int c = 0; c < _minosData.AmountMinosToShow; c++)
             {
                 IMino mino = SelectRandomItem(_minosData.Minos);
-                AddToMinoQueue(mino);
+                _selectedMinos.Enqueue(mino);
 
             }
+            MinoAdded?.Invoke( new List<IMino>(_selectedMinos));
         }
     }
 }
