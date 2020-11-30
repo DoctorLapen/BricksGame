@@ -27,7 +27,9 @@ namespace SuperBricks
 
         [Inject]
         private IScoreView _scoreView;
-        
+
+        [Inject]
+        private IMinoInput _minoInput;
         private const int FIRST_INDEX = 0;
         private const float TARGET_TIME_AMOUNT= 1f;
         [SerializeField]
@@ -42,7 +44,6 @@ namespace SuperBricks
         private Vector2Int _spawnCell;
 
         private MinoModel _minoModel;
-        private List<KeyCode> _correctInputKeys;
         private float _currentTimeAmount = 0f;
 
         
@@ -64,8 +65,6 @@ namespace SuperBricks
            {
                Debug.Log("GameOver");
            }
-           InitializeCorrectKeyCodes();
-
         }
 
         private void OnMinoAddedInSelector(IList<IMino> minos)
@@ -92,55 +91,39 @@ namespace SuperBricks
                 _currentTimeAmount += Time.deltaTime * _minoFallSpeed;
             }
 
-            if (Input.GetKeyDown(KeyCode.W))
+            ActionData actionData = _minoInput.GetNextAction();
+            if (actionData.isActionHappened)
             {
-                List<Vector2Int> checkBlockCoordinates = _minoModel.GetCheckBlockCoordinates();
-                if (_fieldModel.IsRotateInField(_minoModel.BlocksCoordinates[0],checkBlockCoordinates))
+                if (actionData.action == MoveAction.Rotate)
                 {
-                    if (_fieldModel.IsRotatePossible(_minoModel.BlocksCoordinates[0],checkBlockCoordinates))
+                    List<Vector2Int> checkBlockCoordinates = _minoModel.GetCheckBlockCoordinates();
+                    if (_fieldModel.IsRotateInField(_minoModel.BlocksCoordinates[0], checkBlockCoordinates))
                     {
-                        _minoModel.Rotate();
+                        if (_fieldModel.IsRotatePossible(_minoModel.BlocksCoordinates[0], checkBlockCoordinates))
+                        {
+                            _minoModel.Rotate();
+                        }
                     }
-
-                    
                 }
-                
-            }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                 Vector2Int distance = _fieldModel.CalculateDistanceToBottom(_minoModel.BlocksCoordinates);
-                 _minoModel.Move(distance);
-                 UpdateGameState();
-            }
-
-            foreach (KeyCode key in _correctInputKeys)
-            {
-                Vector2Int direction = new Vector2Int(0, 0);
-                //Move
-                //Down
-                if (Input.GetKeyDown(key))
+                else if (actionData.action == MoveAction.ToBottomEnd)
                 {
-                    MinoSide side = MinoSide.Bottom;
-
-                    //Right
-                    if (key == KeyCode.D)
-                    {
-                        direction = new Vector2Int(1, 0);
-                        side = MinoSide.Right;
-                    }
-                    //Left
-                    else if (Input.GetKeyDown(KeyCode.A))
-                    {
-                        direction = new Vector2Int(-1, 0);
-                        side = MinoSide.Left;
-                        
-                    }
-
+                    Vector2Int distance = _fieldModel.CalculateDistanceToBottom(_minoModel.BlocksCoordinates);
+                    _minoModel.Move(distance);
+                    UpdateGameState();
+                }
+                else if (actionData.action == MoveAction.Right)
+                {
+                    Vector2Int direction = new Vector2Int(1, 0);
+                    MinoSide side = MinoSide.Right;
                     MoveMinoWithChecking(side, direction);
                 }
-                
+                else if (actionData.action == MoveAction.Left)
+                {
+                    Vector2Int direction = new Vector2Int(-1, 0);
+                    MinoSide side = MinoSide.Left;
+                    MoveMinoWithChecking(side, direction);
+                }
             }
-            
         }
 
         private void MoveMinoWithChecking(MinoSide side, Vector2Int direction)
@@ -184,13 +167,7 @@ namespace SuperBricks
                 Debug.Log("GameOver");
             }
         }
-
-        private void InitializeCorrectKeyCodes()
-        {
-            _correctInputKeys = new List<KeyCode>() {KeyCode.A,KeyCode.D};
-        }
-       
-
+        
         private void SpawnMino(IMino mino)
         {
             
