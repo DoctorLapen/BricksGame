@@ -21,51 +21,82 @@ namespace SuperBricks
                 Touch touch = Input.GetTouch(0);
                 if (touch.phase == TouchPhase.Began)
                 {
-                    _pointA = touch.position;
+                    if (IsSwipe())
+                    {
+                        _pointA = touch.position;
+                        _pointB = touch.position;
+                    }
+                    else
+                    {
+                        actionData.isActionHappened = true;
+                        actionData.action = MoveAction.Rotate;
+                    }
+                    
+                }
+                else if (touch.phase == TouchPhase.Moved)
+                {
                     _pointB = touch.position;
+                    if(IsHorizontalSwipe())
+                    {
+                        actionData.isActionHappened = true;
+                        float swipeDirection = _pointB.x - _pointA.x;
+                        if (swipeDirection > 0)
+                        {
+                            actionData.action = MoveAction.Right;
+                        }
+                        else
+                        {
+                            actionData.action = MoveAction.Left;
+                        }
+                    }
                 }
                 else if (touch.phase == TouchPhase.Ended)
                 {
-                    _pointB = touch.position;
-                    DetectSwipe(actionData);
+                    if (IsToBottomSwipe())
+                    {
+                        actionData.isActionHappened = true;
+                        actionData.action = MoveAction.ToBottomEnd;
+                    }
+                    
+                   
                 }
             }
 
             return actionData;
         }
 
-        private void DetectSwipe(ActionData actionData)
+        private bool IsHorizontalSwipe()
         {
             if (IsSwipe())
             {
-                actionData.isActionHappened = true;
-                MoveAction action = MoveAction.Rotate;
+                
+                if (!IsVerticalSwipe())
+                {
+
+                    return true;
+                }
+                
+            }
+
+            return false;
+        }
+
+        private bool IsToBottomSwipe()
+        {
+            if (IsSwipe())
+            {
                 if (IsVerticalSwipe())
                 {
-                    float swipeDirection = _pointB.y - _pointA.y ;
-                    if (swipeDirection > 0)
+                    float swipeDirection = _pointB.y - _pointA.y;
+                    if (swipeDirection < 0)
                     {
-                        actionData.action = MoveAction.Rotate;
+                        return true;
                     }
-                    else
-                    {
-                        actionData.action = MoveAction.ToBottomEnd;
-                    }
-
-                }
-                else
-                {
-                    float swipeDirection = _pointB.x - _pointA.x ;
-                    if (swipeDirection > 0)
-                    {
-                        actionData.action = MoveAction.Right;
-                    }
-                    else
-                    {
-                        actionData.action = MoveAction.Left;
-                    }
+                    
                 }
             }
+
+            return false;
         }
 
         private bool IsSwipe()
@@ -85,6 +116,18 @@ namespace SuperBricks
         private float VerticalMovementDistance() 
         {
             return Mathf.Abs(_pointB.y - _pointA.y);
+        }
+
+        private float CalculateRealHorizontalMovementDistance()
+        {
+            Vector3 realPointA = Camera.main.ScreenToWorldPoint(new Vector3(_pointA.x,_pointA.y,-10f));
+            Vector3 realPointB = Camera.main.ScreenToWorldPoint(new Vector3(_pointB.x,_pointB.y,-10f));
+            Debug.Log(_pointA);
+            Debug.Log(_pointB);
+            Debug.Log(realPointA);
+            Debug.Log(realPointB);
+            return Mathf.Abs(realPointB.x - realPointA.x);
+
         }
 
 
