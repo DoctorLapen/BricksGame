@@ -8,9 +8,14 @@ namespace SuperBricks
         [SerializeField]
         private float _minDistanceForSwipe;
 
-        
+        [SerializeField]
+        private int _actionsPerSecond;
+
+
+        private int _actionCount;
         private Vector2 _pointA;
         private Vector2 _pointB;
+        
         
 
         public ActionData GetNextAction()
@@ -25,6 +30,7 @@ namespace SuperBricks
                     {
                         _pointA = touch.position;
                         _pointB = touch.position;
+                        _actionCount = 0;
                     }
                     else
                     {
@@ -36,9 +42,11 @@ namespace SuperBricks
                 else if (touch.phase == TouchPhase.Moved)
                 {
                     _pointB = touch.position;
-                    if(IsHorizontalSwipe())
+                    if(IsHorizontalSwipe()  && _actionCount < _actionsPerSecond)
                     {
                         actionData.isActionHappened = true;
+                        actionData.moveDistance = CalculateRealHorizontalMovementDistance();
+                        
                         float swipeDirection = _pointB.x - _pointA.x;
                         if (swipeDirection > 0)
                         {
@@ -48,6 +56,8 @@ namespace SuperBricks
                         {
                             actionData.action = MoveAction.Left;
                         }
+
+                        _actionCount++;
                     }
                 }
                 else if (touch.phase == TouchPhase.Ended)
@@ -122,10 +132,6 @@ namespace SuperBricks
         {
             Vector3 realPointA = Camera.main.ScreenToWorldPoint(new Vector3(_pointA.x,_pointA.y,-10f));
             Vector3 realPointB = Camera.main.ScreenToWorldPoint(new Vector3(_pointB.x,_pointB.y,-10f));
-            Debug.Log(_pointA);
-            Debug.Log(_pointB);
-            Debug.Log(realPointA);
-            Debug.Log(realPointB);
             return Mathf.Abs(realPointB.x - realPointA.x);
 
         }

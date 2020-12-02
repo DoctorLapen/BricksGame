@@ -15122,6 +15122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _minDistanceForSwipe: 20
+  _actionsPerSecond: 10
 --- !u!4 &1764942303
 Transform:
   m_ObjectHideFlags: 0

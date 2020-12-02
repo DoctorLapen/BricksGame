@@ -114,12 +114,16 @@ namespace SuperBricks
                 else if (actionData.action == MoveAction.Right)
                 {
                     Vector2Int direction = new Vector2Int(1, 0);
+                    direction *= (int) actionData.moveDistance;
+                    Debug.Log(direction);
                     MinoSide side = MinoSide.Right;
                     MoveMinoWithChecking(side, direction);
                 }
                 else if (actionData.action == MoveAction.Left)
                 {
                     Vector2Int direction = new Vector2Int(-1, 0);
+                    direction *= (int) actionData.moveDistance;
+                    Debug.Log(direction);
                     MinoSide side = MinoSide.Left;
                     MoveMinoWithChecking(side, direction);
                 }
