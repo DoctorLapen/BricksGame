@@ -94,6 +94,7 @@ namespace SuperBricks
             ActionData actionData = _minoInput.GetNextAction();
             if (actionData.isActionHappened)
             {
+                Debug.Log(actionData.action );
                 if (actionData.action == MoveAction.Rotate)
                 {
                     List<Vector2Int> checkBlockCoordinates = _minoModel.GetCheckBlockCoordinates();
@@ -114,7 +115,7 @@ namespace SuperBricks
                 else if (actionData.action == MoveAction.Right)
                 {
                     Vector2Int direction = new Vector2Int(1, 0);
-                    direction *= (int) actionData.moveDistance;
+                 //   direction *=  actionData.moveDistance;
                     Debug.Log(direction);
                     MinoSide side = MinoSide.Right;
                     MoveMinoWithChecking(side, direction);
@@ -122,7 +123,7 @@ namespace SuperBricks
                 else if (actionData.action == MoveAction.Left)
                 {
                     Vector2Int direction = new Vector2Int(-1, 0);
-                    direction *= (int) actionData.moveDistance;
+                //    direction *=  actionData.moveDistance;
                     Debug.Log(direction);
                     MinoSide side = MinoSide.Left;
                     MoveMinoWithChecking(side, direction);
@@ -142,12 +143,18 @@ namespace SuperBricks
                     _minoModel.Move(direction);
                 }
             }
+            else if(!isInField && (side == MinoSide.Left || side == MinoSide.Right))
+            {
+            }
+
 
             if (!(isInField && isMovingPossible) && side == MinoSide.Bottom)
             {
                 UpdateGameState();
             }
         }
+        
+
 
         private void UpdateGameState()
         {

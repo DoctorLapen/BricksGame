@@ -15121,8 +15121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faba076c92554d99b4f6a0e30c77c672, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistanceForSwipe: 20
-  _actionsPerSecond: 10
+  _minDistanceForSwipe: 30
+  _actionsPerSecond: 1
 --- !u!4 &1764942303
 Transform:
   m_ObjectHideFlags: 0
@@ -15152,7 +15152,7 @@ MonoBehaviour:
   _components:
   - {fileID: 1764942302}
   _identifier: 
-  _useSceneContext: 1
+  _useSceneContext: 0
   _context: {fileID: 0}
   _bindType: 2
 --- !u!1 &1778993974

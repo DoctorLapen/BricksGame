@@ -26,17 +26,12 @@ namespace SuperBricks
                 Touch touch = Input.GetTouch(0);
                 if (touch.phase == TouchPhase.Began)
                 {
-                    if (IsSwipe())
-                    {
-                        _pointA = touch.position;
-                        _pointB = touch.position;
-                        _actionCount = 0;
-                    }
-                    else
-                    {
-                        actionData.isActionHappened = true;
-                        actionData.action = MoveAction.Rotate;
-                    }
+                    _pointA = touch.position;
+                    _pointB = touch.position;
+                    
+                    _actionCount = 0;
+                    
+                    
                     
                 }
                 else if (touch.phase == TouchPhase.Moved)
@@ -67,8 +62,13 @@ namespace SuperBricks
                         actionData.isActionHappened = true;
                         actionData.action = MoveAction.ToBottomEnd;
                     }
-                    
-                   
+                    else if (_pointB == _pointA)
+                    {
+                        actionData.isActionHappened = true;
+                        actionData.action = MoveAction.Rotate;
+                    }
+
+
                 }
             }
 
@@ -128,11 +128,18 @@ namespace SuperBricks
             return Mathf.Abs(_pointB.y - _pointA.y);
         }
 
-        private float CalculateRealHorizontalMovementDistance()
+        private int CalculateRealHorizontalMovementDistance()
         {
             Vector3 realPointA = Camera.main.ScreenToWorldPoint(new Vector3(_pointA.x,_pointA.y,-10f));
             Vector3 realPointB = Camera.main.ScreenToWorldPoint(new Vector3(_pointB.x,_pointB.y,-10f));
-            return Mathf.Abs(realPointB.x - realPointA.x);
+            int abs = (int) Mathf.Abs(realPointB.x - realPointA.x);
+
+            if (abs < 1)
+            {
+                abs = 1;
+            }
+
+            return  abs;
 
         }
 

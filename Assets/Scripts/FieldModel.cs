@@ -112,6 +112,28 @@ namespace SuperBricks
             }
             return distance;
         }
+        public Vector2Int CalculateDistanceToFieldBorder(Vector2Int direction,IList<Vector2Int> blocksCoordinates)
+        {
+           
+           
+            int startCoordinate = 0;
+            Vector2Int outCoordinate = Vector2Int.zero;
+            foreach (Vector2Int coordinate in blocksCoordinates)
+            {
+                Vector2Int newCoordinate = coordinate  + direction;
+                bool isXInField = startCoordinate <= newCoordinate.x  && newCoordinate.x  < _mainGameSettings.ColumnAmount ;
+                bool isYInField = startCoordinate <= newCoordinate.y  && newCoordinate.y  < _mainGameSettings.RowAmount ;
+              
+                if (!(isXInField && isYInField))
+                {
+                    outCoordinate = newCoordinate;
+                    break;
+                }
+            }
+
+            return direction - outCoordinate;
+
+        }
         public List<int> FindFilledHorizontalLines()
         {
             List<int> lineIndexes = new List<int>();

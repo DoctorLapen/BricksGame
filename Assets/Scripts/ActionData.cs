@@ -4,6 +4,6 @@
     {
         public bool isActionHappened;
         public MoveAction action;
-        public float moveDistance;
+        public int moveDistance;
     }
 }
