@@ -45,6 +45,7 @@ namespace SuperBricks
 
         private MinoModel _minoModel;
         private float _currentTimeAmount = 0f;
+        private bool _isGameOver ;
 
         
         
@@ -52,19 +53,13 @@ namespace SuperBricks
         
         private void Start()
         {
+            _isGameOver = false;
             _scoreModel.ScoreChange += _scoreView.DisplayScore;
             _fieldModel.CellChanged += ChangeStaticSprite;
             _minoSelector.MinoAdded += OnMinoAddedInSelector;
             IMino newMino =  _minoSelector.SelectRandomMino();
-           
-           if (IsGameOver(newMino))
-           {
-               SpawnMino(newMino);
-           }
-           else
-           {
-               Debug.Log("GameOver");
-           }
+            SpawnMino(newMino);
+          
         }
 
         private void OnMinoAddedInSelector(IList<IMino> minos)
@@ -79,50 +74,53 @@ namespace SuperBricks
 
         private void Update()
         {
-            if (TARGET_TIME_AMOUNT < _currentTimeAmount)
+            if (!_isGameOver)
             {
-                Vector2Int direction = new Vector2Int(0, 1);
-                MinoSide side = MinoSide.Bottom;
-                MoveMinoWithChecking(side, direction);
-                _currentTimeAmount = 0f;
-            }
-            else
-            {
-                _currentTimeAmount += Time.deltaTime * _minoFallSpeed;
-            }
-
-            ActionData actionData = _minoInput.DetectAction();
-            if (actionData.isActionHappened)
-            {
-                
-                if (actionData.action == MoveAction.Rotate)
+                if (TARGET_TIME_AMOUNT < _currentTimeAmount)
                 {
-                    List<Vector2Int> checkBlockCoordinates = _minoModel.GetCheckBlockCoordinates();
-                    if (_fieldModel.IsRotateInField(_minoModel.BlocksCoordinates[0], checkBlockCoordinates))
+                    Vector2Int direction = new Vector2Int(0, 1);
+                    MinoSide side = MinoSide.Bottom;
+                    MoveMinoWithChecking(side, direction);
+                    _currentTimeAmount = 0f;
+                }
+                else
+                {
+                    _currentTimeAmount += Time.deltaTime * _minoFallSpeed;
+                }
+
+                ActionData actionData = _minoInput.DetectAction();
+                if (actionData.isActionHappened)
+                {
+
+                    if (actionData.action == MoveAction.Rotate)
                     {
-                        if (_fieldModel.IsRotatePossible(_minoModel.BlocksCoordinates[0], checkBlockCoordinates))
+                        List<Vector2Int> checkBlockCoordinates = _minoModel.GetCheckBlockCoordinates();
+                        if (_fieldModel.IsRotateInField(_minoModel.BlocksCoordinates[0], checkBlockCoordinates))
                         {
-                            _minoModel.Rotate();
+                            if (_fieldModel.IsRotatePossible(_minoModel.BlocksCoordinates[0], checkBlockCoordinates))
+                            {
+                                _minoModel.Rotate();
+                            }
                         }
                     }
-                }
-                else if (actionData.action == MoveAction.ToBottomEnd)
-                {
-                    Vector2Int distance = _fieldModel.CalculateDistanceToBottom(_minoModel.BlocksCoordinates);
-                    _minoModel.Move(distance);
-                    UpdateGameState();
-                }
-                else if (actionData.action == MoveAction.Right)
-                {
-                    Vector2Int direction = new Vector2Int(1, 0);
-                    MinoSide side = MinoSide.Right;
-                    MoveMinoWithChecking(side, direction);
-                }
-                else if (actionData.action == MoveAction.Left)
-                {
-                    Vector2Int direction = new Vector2Int(-1, 0);
-                    MinoSide side = MinoSide.Left;
-                    MoveMinoWithChecking(side, direction);
+                    else if (actionData.action == MoveAction.ToBottomEnd)
+                    {
+                        Vector2Int distance = _fieldModel.CalculateDistanceToBottom(_minoModel.BlocksCoordinates);
+                        _minoModel.Move(distance);
+                        UpdateGameState();
+                    }
+                    else if (actionData.action == MoveAction.Right)
+                    {
+                        Vector2Int direction = new Vector2Int(1, 0);
+                        MinoSide side = MinoSide.Right;
+                        MoveMinoWithChecking(side, direction);
+                    }
+                    else if (actionData.action == MoveAction.Left)
+                    {
+                        Vector2Int direction = new Vector2Int(-1, 0);
+                        MinoSide side = MinoSide.Left;
+                        MoveMinoWithChecking(side, direction);
+                    }
                 }
             }
         }
@@ -167,14 +165,21 @@ namespace SuperBricks
             IMino newMino = _minoSelector.SelectRandomMino();
             if (IsGameOver(newMino))
             {
-                SpawnMino(newMino);
+                StartGameOver();
+                Debug.Log("GameOver");
             }
             else
             {
-                Debug.Log("GameOver");
+                SpawnMino(newMino);
             }
         }
-        
+
+        private void StartGameOver()
+        {
+            Pause.StopTime();
+            _isGameOver = true;
+        }
+
         private void SpawnMino(IMino mino)
         {
             
@@ -198,11 +203,11 @@ namespace SuperBricks
                 bool isCellEmpty = _fieldModel.IsCellEmpty((uint)coordinate.x,(uint) coordinate.y);
                 if (!isCellEmpty)
                 {
-                    return false;
+                    return true;
                 }
             }
 
-            return true;
+            return false;
         }
 
         private void MoveSprite(object sender, NotifyCollectionChangedEventArgs eventArgs)
