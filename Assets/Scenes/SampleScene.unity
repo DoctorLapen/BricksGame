@@ -9822,7 +9822,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b16f8c7bf9704945ae298776a4d1ff72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetFrameRate: 30
+  _targetFrameRate: 25
 --- !u!4 &1233290324
 Transform:
   m_ObjectHideFlags: 0
@@ -15121,8 +15121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faba076c92554d99b4f6a0e30c77c672, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistanceForSwipe: 30
-  _actionsPerSecond: 1
+  _minDistanceForSwipe: 10
+  _actionsPerSwipe: 3
 --- !u!4 &1764942303
 Transform:
   m_ObjectHideFlags: 0

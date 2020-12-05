@@ -2,6 +2,6 @@
 {
     public interface IMinoInput
     {
-        ActionData GetNextAction();
+        ActionData DetectAction();
     }
 }

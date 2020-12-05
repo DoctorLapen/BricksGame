@@ -4,6 +4,5 @@
     {
         public bool isActionHappened;
         public MoveAction action;
-        public int moveDistance;
     }
 }

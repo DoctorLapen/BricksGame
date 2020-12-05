@@ -9,17 +9,19 @@ namespace SuperBricks
         private float _minDistanceForSwipe;
 
         [SerializeField]
-        private int _actionsPerSecond;
+        private int _actionsPerSwipe;
 
 
         private int _actionCount;
         private Vector2 _pointA;
         private Vector2 _pointB;
+        private bool _isFirstMove;
         
         
 
-        public ActionData GetNextAction()
+        public ActionData DetectAction()
         {
+            
             ActionData actionData = new ActionData();
             if (Input.touchCount > 0)
             {
@@ -28,7 +30,7 @@ namespace SuperBricks
                 {
                     _pointA = touch.position;
                     _pointB = touch.position;
-                    
+                    _isFirstMove = true;
                     _actionCount = 0;
                     
                     
@@ -37,19 +39,24 @@ namespace SuperBricks
                 else if (touch.phase == TouchPhase.Moved)
                 {
                     _pointB = touch.position;
-                    if(IsHorizontalSwipe()  && _actionCount < _actionsPerSecond)
+                    if(IsHorizontalSwipe())
                     {
-                        actionData.isActionHappened = true;
-                        actionData.moveDistance = CalculateRealHorizontalMovementDistance();
                         
-                        float swipeDirection = _pointB.x - _pointA.x;
-                        if (swipeDirection > 0)
+                        if (_isFirstMove || _actionCount > _actionsPerSwipe)
                         {
-                            actionData.action = MoveAction.Right;
-                        }
-                        else
-                        {
-                            actionData.action = MoveAction.Left;
+                            actionData.isActionHappened = true;
+
+                            float swipeDirection = _pointB.x - _pointA.x;
+                            if (swipeDirection > 0)
+                            {
+                                actionData.action = MoveAction.Right;
+                            }
+                            else
+                            {
+                                actionData.action = MoveAction.Left;
+                            }
+
+                            _isFirstMove = false;
                         }
 
                         _actionCount++;
@@ -128,20 +135,7 @@ namespace SuperBricks
             return Mathf.Abs(_pointB.y - _pointA.y);
         }
 
-        private int CalculateRealHorizontalMovementDistance()
-        {
-            Vector3 realPointA = Camera.main.ScreenToWorldPoint(new Vector3(_pointA.x,_pointA.y,-10f));
-            Vector3 realPointB = Camera.main.ScreenToWorldPoint(new Vector3(_pointB.x,_pointB.y,-10f));
-            int abs = (int) Mathf.Abs(realPointB.x - realPointA.x);
-
-            if (abs < 1)
-            {
-                abs = 1;
-            }
-
-            return  abs;
-
-        }
+       
 
 
     }

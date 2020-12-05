@@ -91,10 +91,10 @@ namespace SuperBricks
                 _currentTimeAmount += Time.deltaTime * _minoFallSpeed;
             }
 
-            ActionData actionData = _minoInput.GetNextAction();
+            ActionData actionData = _minoInput.DetectAction();
             if (actionData.isActionHappened)
             {
-                Debug.Log(actionData.action );
+                
                 if (actionData.action == MoveAction.Rotate)
                 {
                     List<Vector2Int> checkBlockCoordinates = _minoModel.GetCheckBlockCoordinates();
@@ -115,16 +115,12 @@ namespace SuperBricks
                 else if (actionData.action == MoveAction.Right)
                 {
                     Vector2Int direction = new Vector2Int(1, 0);
-                 //   direction *=  actionData.moveDistance;
-                    Debug.Log(direction);
                     MinoSide side = MinoSide.Right;
                     MoveMinoWithChecking(side, direction);
                 }
                 else if (actionData.action == MoveAction.Left)
                 {
                     Vector2Int direction = new Vector2Int(-1, 0);
-                //    direction *=  actionData.moveDistance;
-                    Debug.Log(direction);
                     MinoSide side = MinoSide.Left;
                     MoveMinoWithChecking(side, direction);
                 }
