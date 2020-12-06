@@ -44,3 +44,6 @@ TagManager:
   - name: Blocks
     uniqueID: 1065230075
     locked: 0
+  - name: Menu
+    uniqueID: 1081899059
+    locked: 0
