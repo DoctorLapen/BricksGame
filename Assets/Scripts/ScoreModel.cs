@@ -8,6 +8,8 @@ namespace SuperBricks
         public event Action<int> ScoreChange; 
         [Inject]
         private IScoreData _scoreData;
+
+        public IScoreData Score => _scoreData;
         
         private int _lineCost;
         
@@ -16,6 +18,8 @@ namespace SuperBricks
         {
             _lineCost = oneLineCost;
         }
+
+        
 
         public void AddScore(int deletedLinesAmount)
         {

@@ -23,6 +23,7 @@ namespace SuperBricks
             Container.Bind<IMinoSelector>().To<MinoSelector>().AsSingle();
             Container.Bind<IScoreModel>().To<ScoreModel>().AsSingle().WithArguments((int)_mainGameSettings.OneLineCost);
             Container.Bind<IScoreData>().To<ScoreData>().AsTransient();
+            Container.Bind<IRecordSaver>().To<JsonRecordSaver>().AsSingle();
         }
     }
 }

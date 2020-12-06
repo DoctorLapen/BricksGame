@@ -30,6 +30,12 @@ namespace SuperBricks
 
         [Inject]
         private IMinoInput _minoInput;
+
+        [Inject]
+        private IRecordSaver _recordSaver;
+
+        [Inject]
+        private IGameOverMenu _gameOverMenu;
         private const int FIRST_INDEX = 0;
         private const float TARGET_TIME_AMOUNT= 1f;
         [SerializeField]
@@ -38,6 +44,8 @@ namespace SuperBricks
         [SerializeField]
         private float _minoFallSpeed ;
 
+        [SerializeField]
+        private string _saveFileName;
         
 
         [SerializeField]
@@ -45,7 +53,7 @@ namespace SuperBricks
 
         private MinoModel _minoModel;
         private float _currentTimeAmount = 0f;
-        private bool _isGameOver ;
+        
 
         
         
@@ -53,7 +61,7 @@ namespace SuperBricks
         
         private void Start()
         {
-            _isGameOver = false;
+            Pause.StartTime();
             _scoreModel.ScoreChange += _scoreView.DisplayScore;
             _fieldModel.CellChanged += ChangeStaticSprite;
             _minoSelector.MinoAdded += OnMinoAddedInSelector;
@@ -74,7 +82,7 @@ namespace SuperBricks
 
         private void Update()
         {
-            if (!_isGameOver)
+            if (!Pause.IsPause)
             {
                 if (TARGET_TIME_AMOUNT < _currentTimeAmount)
                 {
@@ -166,7 +174,6 @@ namespace SuperBricks
             if (IsGameOver(newMino))
             {
                 StartGameOver();
-                Debug.Log("GameOver");
             }
             else
             {
@@ -177,15 +184,24 @@ namespace SuperBricks
         private void StartGameOver()
         {
             Pause.StopTime();
-            _isGameOver = true;
+            _gameOverMenu.ShowMenu();
+            IScoreData recordData = _recordSaver.Load(_saveFileName);
+            IScoreData scoreData = _scoreModel.Score;
+            
+            if(scoreData.Score > recordData.Score)
+            {
+                _recordSaver.Save(_saveFileName,scoreData);
+                _gameOverMenu.ChangeScore(scoreData.Score,true);
+            }
+            else
+            {
+                _gameOverMenu.ChangeScore( scoreData.Score,false);
+            }
         }
-
         private void SpawnMino(IMino mino)
         {
-            
-
-             MinoModel previousMinoModel = _minoModel;
-             Color color = _minoSelector.SelectRandomColor();
+            MinoModel previousMinoModel = _minoModel;
+            Color color = _minoSelector.SelectRandomColor();
             _minoModel = new MinoModel( mino, color);
             _minoModel.BlocksCoordinates.CollectionChanged += MoveSprite;
             _minoModel.InitializeBlockCoordinates(_spawnCell);

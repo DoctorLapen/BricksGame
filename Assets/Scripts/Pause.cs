@@ -4,13 +4,16 @@ namespace SuperBricks
 {
     public static class Pause
     {
+        public static bool IsPause => _isPause;
+        private static bool _isPause = false;
+
         public static void StopTime()
         {
-            Time.timeScale = 0f;
+            _isPause = true;
         }
         public static void StartTime()
         {
-            Time.timeScale = 1f;
+            _isPause = false;
         }
     }
 }
