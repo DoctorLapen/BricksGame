@@ -38,8 +38,7 @@ namespace SuperBricks
         private IGameOverMenu _gameOverMenu;
         private const int FIRST_INDEX = 0;
         private const float TARGET_TIME_AMOUNT= 1f;
-        [SerializeField]
-        private Mino [] _minos;
+        
 
         [SerializeField]
         private float _minoFallSpeed ;

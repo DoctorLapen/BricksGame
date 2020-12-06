@@ -6674,7 +6674,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 11d37dca02bf3f1488fe6c70d3ce3eb0, type: 2}
   - {fileID: 11400000, guid: ef78c38dc25e36c4185a621e3ae3ff75, type: 2}
   - {fileID: 11400000, guid: 0a5e8118318f6e74aa77c086042057ff, type: 2}
-  _minoFallSpeed: 2
+  _minoFallSpeed: 3
   _saveFileName: animals.json
   _spawnCell: {x: 3, y: 0}
 --- !u!4 &772008672
