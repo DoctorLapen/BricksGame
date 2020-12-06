@@ -50,13 +50,15 @@ namespace SuperBricks
 
         }
 
-        public void SpawnMinos(List<List<Vector2Int>> blockCoordinates)
+        public void SpawnMinos(IList<IMino> minos)
         {
             ClearView();
             for (int minoNum = 0; minoNum < _minosData.AmountMinosToShow; minoNum++)
             {
-                foreach (Vector2Int blockCoordinate in blockCoordinates[minoNum])
+                IMino mino = minos[minoNum];
+                foreach (Vector2Int coordinate in mino.BlocksLocalCoordinates[MinoSide.Bottom])
                 {
+                    Vector2Int blockCoordinate  = coordinate + mino.AligmentValue;
                     SpriteRenderer block = GetBlock();
                     block.transform.localPosition = CalculateCellPosition(blockCoordinate.x,blockCoordinate.y,_startPositions[minoNum]);
                     _showedBlocks.Enqueue(block);

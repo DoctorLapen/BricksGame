@@ -72,12 +72,8 @@ namespace SuperBricks
 
         private void OnMinoAddedInSelector(IList<IMino> minos)
         {
-            List<List<Vector2Int>> minosCoordinatesLists = new List<List<Vector2Int>>();
-            foreach (var mino in minos)
-            {
-                minosCoordinatesLists.Add(mino.BlocksLocalCoordinates[MinoSide.Bottom]);
-            }
-            _nextMinosView.SpawnMinos(minosCoordinatesLists);
+            _nextMinosView.SpawnMinos(minos);
+           
         }
 
         private void Update()

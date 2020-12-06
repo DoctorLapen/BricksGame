@@ -12,10 +12,16 @@ namespace SuperBricks
         [SerializeField]
         private Vector2IntDictionary _blocksLocalCoordinates = new Vector2IntDictionary();
 
+        [SerializeField]
+        private Vector2Int _aligmentValue;
+
+        
+
         private Dictionary<MinoSide, List<Vector2Int>> blocksLocalCoordinates = new Dictionary<MinoSide, List<Vector2Int>>();
 
 
         public Dictionary<MinoSide,List<Vector2Int>> BlocksLocalCoordinates => blocksLocalCoordinates;
+        public Vector2Int AligmentValue => _aligmentValue;
 
         private void OnEnable()
         {
